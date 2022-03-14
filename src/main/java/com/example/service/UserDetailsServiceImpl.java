@@ -21,7 +21,7 @@ import com.example.repository.UserRepository;
  *
  */
 @Service
-public class UsertDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 	
 	@Autowired
 	private UserRepository userRepository;

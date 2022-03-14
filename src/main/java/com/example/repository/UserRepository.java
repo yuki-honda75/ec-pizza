@@ -52,7 +52,7 @@ public class UserRepository {
 	 * @return なければnull
 	 */
 	public User findByMailAddress(String email) {
-		String sql = "SELECT id FROM users WHERE email=:email";
+		String sql = "SELECT id,email,password FROM users WHERE email=:email";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("email", email);
 		List<User> userList = template.query(sql, param, USER_ROW_MAPPER);
 		
