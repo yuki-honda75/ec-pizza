@@ -59,4 +59,16 @@ public class ItemRepository {
 	};
 	
 	private static final RowMapper<Item> ITEM_ROW_MAPPER = new BeanPropertyRowMapper<>(Item.class);
+	
+	/**
+	 * 商品全件取得
+	 * 
+	 * @return
+	 */
+	public List<Item> findAll() {
+		String sql = "SELECT id,name,description,price_M,price_L,image_path FROM items";
+		List<Item> itemList = template.query(sql, ITEM_ROW_MAPPER);
+		
+		return itemList;
+	}
 }
