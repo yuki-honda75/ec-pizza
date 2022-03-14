@@ -25,4 +25,14 @@ public class UserService {
 	public void register(User user) {
 		userRepository.insert(user);
 	}
+	
+	/**
+	 * メールアドレス重複確認
+	 * 
+	 * @param email
+	 * @return
+	 */
+	public User checkEmail(String email) {
+		return userRepository.findByMailAddress(email);
+	}
 }

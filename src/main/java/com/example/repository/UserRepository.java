@@ -1,5 +1,7 @@
 package com.example.repository;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
@@ -41,5 +43,22 @@ public class UserRepository {
 									.addValue("telephone", user.getTelephone());
 		
 		template.update(sql, param);
+	}
+	
+	/**
+	 * メールアドレス検索
+	 * 
+	 * @param email
+	 * @return なければnull
+	 */
+	public User findByMailAddress(String email) {
+		String sql = "SELECT id FROM users WHERE email=:email";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("email", email);
+		List<User> userList = template.query(sql, param, USER_ROW_MAPPER);
+		
+		if (userList.size() == 0) {
+			return null;
+		}
+		return userList.get(0);
 	}
 }
