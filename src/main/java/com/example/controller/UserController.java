@@ -57,9 +57,15 @@ public class UserController {
 	@RequestMapping("/register")
 	public String register(@Validated InsertUserForm form
 						,BindingResult result) {
+		//パスワードと確認パスワード照合
 		if (!form.getPassword().equals(form.getConfirmPass())) {
 			result.rejectValue("confirmPass", null, "パスワードと確認用パスワードが不一致です");
 		}
+		//メールアドレス確認
+		if (userService.checkEmail(form.getEmail()) != null) {
+			result.rejectValue("email", null, "そのメールアドレスはすでに使われています");
+		}
+		//一つでもエラーなら登録画面へ
 		if (result.hasErrors()) {
 			return toRegister();
 		}
