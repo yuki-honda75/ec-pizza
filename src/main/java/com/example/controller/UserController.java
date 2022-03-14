@@ -3,6 +3,9 @@ package com.example.controller;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.domain.User;
@@ -21,6 +24,21 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	@ModelAttribute
+	public InsertUserForm setUpInsertUserForm() {
+		return new InsertUserForm();
+	}
+	
+	/**
+	 * ログイン画面を表示
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/")
+	public String toLogin() {
+		return "login";
+	}
+	
 	/**
 	 * 新規登録画面を表示
 	 * 
@@ -37,7 +55,14 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping("/register")
-	public String register(InsertUserForm form) {
+	public String register(@Validated InsertUserForm form
+						,BindingResult result) {
+		if (!form.getPassword().equals(form.getConfirmPass())) {
+			result.rejectValue("confirmPass", null, "パスワードと確認用パスワードが不一致です");
+		}
+		if (result.hasErrors()) {
+			return toRegister();
+		}
 		//確認用
 		User user = new User();
 //		user.setName("sample");
@@ -48,6 +73,6 @@ public class UserController {
 //		user.setPassword("12345678");
 		BeanUtils.copyProperties(form, user);
 		userService.register(user);
-		return "item_list_pizza";
+		return "redirect:/";
 	}
 }

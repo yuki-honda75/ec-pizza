@@ -34,6 +34,7 @@ public class InsertUserForm {
 	@Size(min = 8, max = 16, message = "パスワードは８文字以上１６文字以内で設定してください")
 	private String password;
 	/** 確認用パスワード */
+	@NotBlank(message = "確認用パスワードを入力してください")
 	private String confirmPass;
 	
 	public String getName() {
