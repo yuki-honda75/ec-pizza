@@ -33,6 +33,7 @@
               <img
                 alt="main log"
                 src="../static/img_pizza/header_logo.png"
+                th:src="@{/img_pizza/header_logo.png}"
                 height="35"
               />
             </a>
@@ -66,7 +67,8 @@
           "
         >
           <div class="well">
-            <form method="post" action="item_list_pizza.html">
+            <form method="post" action="item_list_pizza.html" 
+            th:action="@{/register}" th:object="${insertUserForm}">
               <fieldset>
                 <legend>ユーザ登録</legend>
                 <div class="form-group">
@@ -75,6 +77,7 @@
                     class="control-label"
                     style="color: red"
                     for="inputError"
+                    th:errors="*{name}"
                     >名前を入力してください</label
                   >
                   <input
@@ -82,6 +85,7 @@
                     id="inputName"
                     class="form-control"
                     placeholder="Name"
+                    th:field="*{name}"
                   />
                 </div>
                 <div class="form-group">
@@ -90,13 +94,15 @@
                     class="control-label"
                     style="color: red"
                     for="inputError"
+                    th:errors="*{email}"
                     >メールアドレスを入力してください</label
                   >
                   <input
-                    type="text"
+                    type="email"
                     id="inputEmail"
                     class="form-control"
                     placeholder="Email"
+                    th:field="*{email}"
                   />
                 </div>
                 <div class="form-group">
@@ -105,6 +111,7 @@
                     class="control-label"
                     style="color: red"
                     for="inputError"
+                    th:errors="*{zipcode}"
                     >郵便番号を入力してください</label
                   >
                   <input type="button" value="住所検索" />
@@ -113,6 +120,7 @@
                     id="inputZipcode"
                     class="form-control"
                     placeholder="Zipcode"
+                    th:field="*{zipcode}"
                   />
                 </div>
                 <div class="form-group">
@@ -121,6 +129,7 @@
                     class="control-label"
                     style="color: red"
                     for="inputError"
+                    th:errors="*{address}"
                     >住所を入力してください</label
                   >
                   <input
@@ -128,6 +137,7 @@
                     id="inputAddress"
                     class="form-control"
                     placeholder="Address"
+                    th:field="*{address}"
                   />
                 </div>
                 <div class="form-group">
@@ -136,6 +146,7 @@
                     class="control-label"
                     style="color: red"
                     for="inputError"
+                    th:errors="*{telephone}"
                     >電話番号を入力してください</label
                   >
                   <input
@@ -143,6 +154,7 @@
                     id="inputTel"
                     class="form-control"
                     placeholder="Tel"
+                    th:field="*{telephone}"
                   />
                 </div>
                 <div class="form-group">
@@ -151,13 +163,15 @@
                     class="control-label"
                     style="color: red"
                     for="inputError"
+                    th:errors="*{password}"
                     >パスワードを入力してください</label
                   >
                   <input
-                    type="text"
+                    type="password"
                     id="inputPassword"
                     class="form-control"
                     placeholder="Password"
+                    th:field="*{password}"
                   />
                 </div>
                 <div class="form-group">
@@ -168,13 +182,15 @@
                     class="control-label"
                     style="color: red"
                     for="inputError"
+                    th:errors="*{confirmPass}"
                     >確認用パスワードを入力してください</label
                   >
                   <input
-                    type="text"
+                    type="password"
                     id="inputConfirmationPassword"
                     class="form-control"
                     placeholder="Confirmation Password"
+                    th:field="*{confirmPass}"
                   />
                 </div>
                 <div class="form-group">
