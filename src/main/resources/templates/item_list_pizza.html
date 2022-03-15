@@ -135,7 +135,7 @@
               <tr>
               </th:block>
                 <th>
-                  <a href="item_detail.html">
+                  <a href="item_detail.html" th:href="@{/item/detail?id=} + ${item.id}">
                     <img
                       src="../static/img_pizza/1.jpg"
                       th:src="@{/img_pizza/} + ${item.imagePath}"

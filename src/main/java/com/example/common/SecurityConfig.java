@@ -38,15 +38,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		//ログイン画面と新規登録画面を許可
 		http.authorizeRequests()
-			.antMatchers("/", "/toRegister", "/register", "/item/showList").permitAll()
-			.anyRequest().authenticated();
+		.antMatchers("/order/confirm", "/order/histroy").authenticated()
+		.anyRequest().permitAll();
 		
 		//ログイン設定
 		http.formLogin()
 			.loginPage("/")
 			.loginProcessingUrl("/login")
 			.failureUrl("/?error=true")
-			.defaultSuccessUrl("/item/showList", true)
+			.defaultSuccessUrl("/item/showList", false)
 			.usernameParameter("email")
 			.passwordParameter("password");
 		
