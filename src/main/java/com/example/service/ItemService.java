@@ -21,4 +21,8 @@ public class ItemService {
 	public List<Item> showList() {
 		return itemRepository.findAll();
 	}
+
+	public List<Item> search(String name, Integer sortNum) {
+		return itemRepository.findByCondition(name, sortNum);
+	}
 }
