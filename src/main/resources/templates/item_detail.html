@@ -60,7 +60,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
         <!-- /.container-fluid -->
       </nav>
 
-      <form action="cart_list.html">
+      <form action="cart_list.html" th:action="@{/order/incart}">
         <div class="row">
           <div class="col-xs-offset-2 col-xs-8">
             <h3 class="text-center">商品詳細</h3>
@@ -127,7 +127,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                     <div class="col-sm-12">
                       <span style="margin-left: 10px;"></span>
                       <label class="checkbox-inline" th:each="topping,status : ${item.toppingList}">
-                        <input type="checkbox" value="" /><span th:text="${topping.name}">オニオン</span>
+                        <input type="checkbox" name="toppingId" th:value="${topping.id}" /><span th:text="${topping.name}">オニオン</span>
                       </label>
                     </div>
                   </div>
