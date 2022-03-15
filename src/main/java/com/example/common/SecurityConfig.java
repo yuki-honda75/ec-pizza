@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		//ログイン画面と新規登録画面を許可
 		http.authorizeRequests()
-			.antMatchers("/", "/toRegister", "/register").permitAll()
+			.antMatchers("/", "/toRegister", "/register", "/item/showList").permitAll()
 			.anyRequest().authenticated();
 		
 		//ログイン設定
@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.loginPage("/")
 			.loginProcessingUrl("/login")
 			.failureUrl("/?error=true")
-			.defaultSuccessUrl("/toRegister", false)
+			.defaultSuccessUrl("/item/showList", true)
 			.usernameParameter("email")
 			.passwordParameter("password");
 		
