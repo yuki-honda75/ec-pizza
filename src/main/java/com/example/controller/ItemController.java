@@ -41,4 +41,19 @@ public class ItemController {
 		
 		return "item_list_pizza";
 	}
+
+	/**
+	 * 商品詳細画面を表示する
+	 * 
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/detail")
+	public String showDetail(Integer id, Model model) {
+		Item item = itemService.showDetail(id);
+		model.addAttribute("item", item);
+
+		return "item_detail";
+	}
 }
