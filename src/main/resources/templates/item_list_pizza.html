@@ -77,7 +77,7 @@
               <div class="panel-title">商品を検索する</div>
             </div>
             <div class="panel-body">
-              <form method="post" action="#" class="form-horizontal">
+              <form method="post" action="#" th:action="@{/item/showList}" class="form-horizontal">
                 <div class="form-group">
                   <label for="code" class="control-label col-sm-2"
                     >商品名</label
@@ -85,10 +85,20 @@
                   <div class="col-sm-9">
                     <input
                       type="text"
-                      name="code"
+                      name="name"
+                      th:value="${name}"
                       id="code"
                       class="form-control input-sm"
                     />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="" class="control-label col-sm-2">並び替え</label>
+                  <div class="col-sm-9">
+                    <select class="form-control" name="sortNum">
+                      <option value="0" th:selected="${sortNum == 0}">安い順</option>
+                      <option value="1" th:selected="${sortNum == 1}">高い順</option>
+                    </select>
                   </div>
                 </div>
                 <div class="text-center">

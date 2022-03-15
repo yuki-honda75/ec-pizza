@@ -21,10 +21,22 @@ public class ItemController {
 	@Autowired
 	private ItemService itemService;
 	
-	//仮マッピング
+	/**
+	 * 商品一覧を表示する,検索する
+	 * 
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping("/showList")
-	public String showList(Model model) {
-		List<Item> itemList = itemService.showList();
+	public String showList(String name, Integer sortNum, Model model) {
+		List<Item> itemList = null;
+		if (name != null || sortNum != null) {
+			itemList = itemService.search(name, sortNum);
+		} else {
+			itemList = itemService.showList();
+		}
+		model.addAttribute("name", name);
+		model.addAttribute("sortNum", sortNum);
 		model.addAttribute("itemList", itemList);
 		
 		return "item_list_pizza";
