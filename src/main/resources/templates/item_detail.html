@@ -60,7 +60,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
         <!-- /.container-fluid -->
       </nav>
 
-      <form action="cart_list.html" th:action="@{/order/incart}">
+      <form action="cart_list.html" th:action="@{/order/incart}" th:object="${insertOrderForm}">
         <div class="row">
           <div class="col-xs-offset-2 col-xs-8">
             <h3 class="text-center">商品詳細</h3>
@@ -96,14 +96,16 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                       <label class="radio-inline">
                         <input
                           type="radio"
-                          name="responsibleCompany"
+                          name="size"
+                          th:field="*{size}"
+                          value="M"
                           checked="checked"
                         />
                         <span class="price">&nbsp;М&nbsp;</span
                         >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceM, 0 , 'COMMA')}">1,380</span>円(税抜)
                       </label>
                       <label class="radio-inline">
-                        <input type="radio" name="responsibleCompany" />
+                        <input type="radio" name="size" th:field="*{size}" value="L"/>
                         <span class="price">&nbsp;Ｌ</span
                         >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceL, 0 , 'COMMA')}">2,380</span>円(税抜)
                       </label>
@@ -127,7 +129,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                     <div class="col-sm-12">
                       <span style="margin-left: 10px;"></span>
                       <label class="checkbox-inline" th:each="topping,status : ${item.toppingList}">
-                        <input type="checkbox" name="toppingIdList" th:value="${topping.id}" /><span th:text="${topping.name}">オニオン</span>
+                        <input type="checkbox" name="orderToppingIdList" th:field="*{orderToppingIdList}" th:value="${topping.id}" /><span th:text="${topping.name}">オニオン</span>
                       </label>
                     </div>
                   </div>
@@ -146,7 +148,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                         for="inputError"
                         >数量を選択してください</label
                       >
-                      <select name="area" class="form-control">
+                      <select name="quantity" th:field="*{quantity}" class="form-control">
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -169,7 +171,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
             <div class="row">
               <div class="col-xs-offset-2 col-xs-10">
                 <div class="form-group">
-                  <span id="total-price">この商品金額：38,000 円(税抜)</span>
+                  <span id="total-price">この商品金額：<span th:text="${#numbers.formatInteger(item.priceM, 0 , 'COMMA')}">38,000</span> 円(税抜)</span>
                 </div>
               </div>
             </div>
@@ -177,6 +179,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
               <div class="col-xs-offset-2 col-xs-3">
                 <div class="form-group">
                   <p>
+                    <input type="hidden" name="itemId" th:value="${item.id}">
                     <input
                       class="form-control btn btn-warning btn-block"
                       type="submit"

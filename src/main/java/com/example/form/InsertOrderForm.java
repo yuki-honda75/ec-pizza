@@ -2,8 +2,6 @@ package com.example.form;
 
 import java.util.List;
 
-import com.example.domain.OrderTopping;
-
 /**
  * 
  * @author hondayuki
@@ -17,7 +15,7 @@ public class InsertOrderForm {
 	/** サイズ */
 	private String size;
 	/** トッピングリスト */
-	private List<OrderTopping> orderToppingList;
+	private List<Integer> orderToppingIdList;
 	
 	public Integer getIntItemId() {
 		return Integer.parseInt(itemId);
@@ -49,12 +47,12 @@ public class InsertOrderForm {
 	public void setSize(String size) {
 		this.size = size;
 	}
-	public List<OrderTopping> getOrderToppingList() {
-		return orderToppingList;
+	public List<Integer> getOrderToppingIdList() {
+		return orderToppingIdList;
 	}
-	public void setOrderToppingList(
-			List<OrderTopping> orderToppingList) {
-		this.orderToppingList = orderToppingList;
+	public void setOrderToppingIdList(
+			List<Integer> orderToppingList) {
+		this.orderToppingIdList = orderToppingList;
 	}
 	
 	@Override
@@ -62,6 +60,6 @@ public class InsertOrderForm {
 		return "InsertOrderForm [itemId=" + itemId
 				+ ", quantity=" + quantity + ", size="
 				+ size + ", orderToppingList="
-				+ orderToppingList + "]";
+				+ orderToppingIdList + "]";
 	}
 }

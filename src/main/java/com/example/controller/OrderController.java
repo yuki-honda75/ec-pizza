@@ -43,7 +43,7 @@ public class OrderController {
     }
 
     @RequestMapping("/incart")
-    public String inCart(InsertOrderForm form, List<Integer> toppingIdList, @AuthenticationPrincipal LoginUser loginUser) {
+    public String inCart(InsertOrderForm form, @AuthenticationPrincipal LoginUser loginUser) {
         Order order = (Order) session.getAttribute("order");
         
         //注文商品情報を作成
@@ -57,12 +57,14 @@ public class OrderController {
         orderItem.setItem(item);
         //トッピング情報
         List<OrderTopping> orderToppingList = new ArrayList<>();
-        List<Topping> toppingList = itemService.selectTopping(toppingIdList);
-        for (Topping topping : toppingList) {
-            OrderTopping orderTopping = new OrderTopping();
-            orderTopping.setToppingId(topping.getId());
-            orderTopping.setTopping(topping);
-            orderToppingList.add(orderTopping);
+        List<Topping> toppingList = itemService.selectTopping(form.getOrderToppingIdList());
+        if (toppingList != null) {
+            for (Topping topping : toppingList) {
+                OrderTopping orderTopping = new OrderTopping();
+                orderTopping.setToppingId(topping.getId());
+                orderTopping.setTopping(topping);
+                orderToppingList.add(orderTopping);
+            }
         }
         orderItem.setOrderToppingList(orderToppingList);
 
@@ -87,6 +89,6 @@ public class OrderController {
         } else {
             //ログインしているとき（データベース
         }
-        return "cart_list";
+        return "redirect:/item/showList";
     }
 }

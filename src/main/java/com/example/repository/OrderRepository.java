@@ -123,7 +123,7 @@ public class OrderRepository {
                                     .addValue("status", order.getStatus())
                                     .addValue("totalPrice", order.getTotalPrice());
 
-        int orderId = template.update(sql, param);
+        Integer orderId = template.queryForObject(sql, param, Integer.class);
 
         //注文商品の登録
         List<OrderItem> orderItemList = order.getOrderItemList();
@@ -137,18 +137,20 @@ public class OrderRepository {
                 .addValue("orderId", orderId)
                 .addValue("quantity", orderItem.getQuantity())
                 .addValue("size", orderItem.getSize());
-                int orderItemId = template.update(orderItemSql, param);
+                Integer orderItemId = template.queryForObject(orderItemSql, param2, Integer.class);
 
                 List<OrderTopping> toppingList = orderItem.getOrderToppingList();
-                for (int i = 0; i < toppingList.size(); i++) {
-                    orderToppingSql += " (:toppingId,:orderItemId)";
-                    param2.addValue("toppingId" + i, toppingList.get(i).getToppingId());
-                    if (i < toppingList.size() - 1) {
-                        orderToppingSql += ",";
+                if (!toppingList.isEmpty()) {
+                    for (int i = 0; i < toppingList.size(); i++) {
+                        orderToppingSql += " (:toppingId" + i + ",:orderItemId)";
+                        param2.addValue("toppingId" + i, toppingList.get(i).getToppingId());
+                        if (i < toppingList.size() - 1) {
+                            orderToppingSql += ",";
+                        }
                     }
+                    param2.addValue("orderItemId", orderItemId);
+                    template.update(orderToppingSql, param2);
                 }
-                param2.addValue("orderItemId", orderItemId);
-                template.update(orderToppingSql, param);
             }
         }
     }
@@ -168,17 +170,19 @@ public class OrderRepository {
         .addValue("orderId", orderId)
         .addValue("quantity", orderItem.getQuantity())
         .addValue("size", orderItem.getSize());
-        int orderItemId = template.update(orderItemSql, param);
+        Integer orderItemId = template.queryForObject(orderItemSql, param, Integer.class);
 
         List<OrderTopping> toppingList = orderItem.getOrderToppingList();
-        for (int i = 0; i < toppingList.size(); i++) {
-            orderToppingSql += " (:toppingId,:orderItemId)";
-            param.addValue("toppingId" + i, toppingList.get(i).getToppingId());
-            if (i < toppingList.size() - 1) {
-                orderToppingSql += ",";
+        if (!toppingList.isEmpty()) {
+            for (int i = 0; i < toppingList.size(); i++) {
+                orderToppingSql += " (:toppingId,:orderItemId)";
+                param.addValue("toppingId" + i, toppingList.get(i).getToppingId());
+                if (i < toppingList.size() - 1) {
+                    orderToppingSql += ",";
+                }
             }
+            param.addValue("orderItemId", orderItemId);
+            template.update(orderToppingSql, param);
         }
-        param.addValue("orderItemId", orderItemId);
-        template.update(orderToppingSql, param);
     }
 }
