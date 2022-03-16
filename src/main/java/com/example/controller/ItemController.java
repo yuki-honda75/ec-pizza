@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.domain.Item;
+import com.example.form.InsertOrderForm;
 import com.example.service.ItemService;
 
 /**
@@ -20,6 +22,11 @@ import com.example.service.ItemService;
 public class ItemController {
 	@Autowired
 	private ItemService itemService;
+
+	@ModelAttribute
+	public InsertOrderForm setUpInsertOrderForm() {
+		return new InsertOrderForm();
+	}
 	
 	/**
 	 * 商品一覧を表示する,検索する
@@ -50,9 +57,12 @@ public class ItemController {
 	 * @return
 	 */
 	@RequestMapping("/detail")
-	public String showDetail(Integer id, Model model) {
+	public String showDetail(InsertOrderForm form, Integer id, Model model) {
 		Item item = itemService.showDetail(id);
 		model.addAttribute("item", item);
+		if (form.getSize() == null) {
+			form.setSize("0");
+		}
 
 		return "item_detail";
 	}

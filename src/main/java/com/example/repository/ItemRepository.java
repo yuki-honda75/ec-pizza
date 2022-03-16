@@ -79,4 +79,31 @@ public class ItemRepository {
 
 		return item;
 	}
+
+	/**
+	 * 選択したトッピングを取得する
+	 * 
+	 * @param toppingIdList
+	 * @return
+	 */
+	public List<Topping> findToppingById(List<Integer> toppingIdList) {
+		if (toppingIdList.isEmpty()) {
+			return null;
+		}
+		String sql = "SELECT id,name,price_M,price_L FROM toppings";
+		String whereSql = " WHERE 1=1";
+		MapSqlParameterSource param = new MapSqlParameterSource();
+		int i = 0;
+		for (Integer toppingId : toppingIdList) {
+			if (i == 0) {
+				whereSql += " AND id=:id" + i;
+			} else {
+				whereSql += " OR id=:id" + i;
+			}
+			param.addValue("id" + i, toppingId);
+			i++;
+		}
+
+		return template.query(sql + whereSql, param, TOPPING_ROW_MAPPER);
+	}
 }

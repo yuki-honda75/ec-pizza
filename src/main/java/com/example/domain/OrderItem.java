@@ -11,11 +11,11 @@ public class OrderItem {
 	/** ID */
 	private Integer id;
 	/** 商品ID */
-	private String itemId;
+	private Integer itemId;
 	/** 注文ID */
-	private String orderId;
+	private Integer orderId;
 	/** 数量 */
-	private String quantity;
+	private Integer quantity;
 	/** サイズ */
 	private Character size;
 	/** 商品 */
@@ -29,22 +29,22 @@ public class OrderItem {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getItemId() {
+	public Integer getItemId() {
 		return itemId;
 	}
-	public void setItemId(String itemId) {
+	public void setItemId(Integer itemId) {
 		this.itemId = itemId;
 	}
-	public String getOrderId() {
+	public Integer getOrderId() {
 		return orderId;
 	}
-	public void setOrderId(String orderId) {
+	public void setOrderId(Integer orderId) {
 		this.orderId = orderId;
 	}
-	public String getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
-	public void setQuantity(String quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 	public Character getSize() {
@@ -76,4 +76,19 @@ public class OrderItem {
 				+ orderToppingList + "]";
 	}
 	
+	public int getSubTotal() {
+		int total = 0;
+		if (size == 'M') {
+			total += item.getPriceM();
+			for (OrderTopping orderTopping : orderToppingList) {
+				total += orderTopping.getTopping().getPriceM();
+			}
+		} else {
+			total += item.getPriceL();
+			for (OrderTopping orderTopping : orderToppingList) {
+				total += orderTopping.getTopping().getPriceL();
+			}
+		}
+		return total;
+	}
 }
