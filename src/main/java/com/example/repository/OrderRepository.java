@@ -11,7 +11,9 @@ import com.example.domain.Topping;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -30,7 +32,7 @@ public class OrderRepository {
         List<OrderTopping> orderToppingList = null;
         int preOId = 0;
         int preOIID = 0;
-        
+
         while (rs.next()) {
             int nowOId = rs.getInt("order_id");
             int nowOIId = rs.getInt("order_topping_id");
@@ -91,4 +93,92 @@ public class OrderRepository {
 
         return orderList;
     };
+    
+    /**
+     * カートの存在チェック
+     * 
+     * @param userId
+     * @return
+     */
+    public Order findExistOrder(Integer userId) {
+        String sql = "SELECT id FROM orders WHERE user_id=:userId AND status=0";
+        SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
+        List<Order> orderList = template.query(sql, param, ORDER_RESULT_SET_EXTRACTOR);
+        
+        if (orderList.isEmpty()) {
+            return null;
+        }
+        return orderList.get(0);
+    }
+
+    /**
+     * 最初のカート作成
+     * 
+     * @param order
+     */
+    public void insert(Order order) {
+        String sql = "INSERT INTO orders (user_id, status, total_price) VALUES (:userId, :status, :totalPrice) RETURNING id";
+        SqlParameterSource param = new MapSqlParameterSource()
+                                    .addValue("userId", order.getUserId())
+                                    .addValue("status", order.getStatus())
+                                    .addValue("totalPrice", order.getTotalPrice());
+
+        int orderId = template.update(sql, param);
+
+        //注文商品の登録
+        List<OrderItem> orderItemList = order.getOrderItemList();
+        if (!orderItemList.isEmpty()) {
+            //ループ処理で注文商品の数だけ
+            String orderItemSql = "INSERT INTO order_items (item_id, order_id, quantity, size) VALUES (:itemId,:orderId,:quantity,:size) RETURNING id";
+            String orderToppingSql = "INSERT INTO order_toppings (topping_id, order_item_id) VALUES";
+            MapSqlParameterSource param2 = new MapSqlParameterSource();
+            for (OrderItem orderItem : orderItemList) {
+                param2.addValue("itemId", orderItem.getItemId())
+                .addValue("orderId", orderId)
+                .addValue("quantity", orderItem.getQuantity())
+                .addValue("size", orderItem.getSize());
+                int orderItemId = template.update(orderItemSql, param);
+
+                List<OrderTopping> toppingList = orderItem.getOrderToppingList();
+                for (int i = 0; i < toppingList.size(); i++) {
+                    orderToppingSql += " (:toppingId,:orderItemId)";
+                    param2.addValue("toppingId" + i, toppingList.get(i).getToppingId());
+                    if (i < toppingList.size() - 1) {
+                        orderToppingSql += ",";
+                    }
+                }
+                param2.addValue("orderItemId", orderItemId);
+                template.update(orderToppingSql, param);
+            }
+        }
+    }
+
+    /**
+     * すでに作成済みのカートに入れる
+     * 
+     * @param orderItem
+     * @param orderId
+     */
+    public void insertOrderItem(OrderItem orderItem, Integer orderId) {
+
+        String orderItemSql = "INSERT INTO order_items (item_id, order_id, quantity, size) VALUES (:itemId,:orderId,:quantity,:size) RETURNING id";
+        String orderToppingSql = "INSERT INTO order_toppings (topping_id, order_item_id) VALUES";
+        MapSqlParameterSource param = new MapSqlParameterSource();
+        param.addValue("itemId", orderItem.getItemId())
+        .addValue("orderId", orderId)
+        .addValue("quantity", orderItem.getQuantity())
+        .addValue("size", orderItem.getSize());
+        int orderItemId = template.update(orderItemSql, param);
+
+        List<OrderTopping> toppingList = orderItem.getOrderToppingList();
+        for (int i = 0; i < toppingList.size(); i++) {
+            orderToppingSql += " (:toppingId,:orderItemId)";
+            param.addValue("toppingId" + i, toppingList.get(i).getToppingId());
+            if (i < toppingList.size() - 1) {
+                orderToppingSql += ",";
+            }
+        }
+        param.addValue("orderItemId", orderItemId);
+        template.update(orderToppingSql, param);
+    }
 }
