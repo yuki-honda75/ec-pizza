@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.domain.Item;
+import com.example.domain.Topping;
 import com.example.repository.ItemRepository;
 
 /**
@@ -28,5 +29,9 @@ public class ItemService {
 
 	public Item showDetail(Integer id) {
 		return itemRepository.load(id);
+	}
+
+	public List<Topping> selectTopping(List<Integer> toppingIdList) {
+		return itemRepository.findToppingById(toppingIdList);
 	}
 }

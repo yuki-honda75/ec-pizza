@@ -86,7 +86,7 @@ public class ItemRepository {
 	 * @param toppingIdList
 	 * @return
 	 */
-	public List<Topping> findByIoppingId(List<Integer> toppingIdList) {
+	public List<Topping> findToppingById(List<Integer> toppingIdList) {
 		if (toppingIdList.isEmpty()) {
 			return null;
 		}

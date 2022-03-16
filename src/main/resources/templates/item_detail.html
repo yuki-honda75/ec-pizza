@@ -127,7 +127,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                     <div class="col-sm-12">
                       <span style="margin-left: 10px;"></span>
                       <label class="checkbox-inline" th:each="topping,status : ${item.toppingList}">
-                        <input type="checkbox" name="toppingId" th:value="${topping.id}" /><span th:text="${topping.name}">オニオン</span>
+                        <input type="checkbox" name="toppingIdList" th:value="${topping.id}" /><span th:text="${topping.name}">オニオン</span>
                       </label>
                     </div>
                   </div>
