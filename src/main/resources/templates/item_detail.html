@@ -98,14 +98,14 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                           type="radio"
                           name="size"
                           th:field="*{size}"
-                          value="M"
+                          value="0"
                           checked="checked"
                         />
                         <span class="price">&nbsp;М&nbsp;</span
                         >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceM, 0 , 'COMMA')}">1,380</span>円(税抜)
                       </label>
                       <label class="radio-inline">
-                        <input type="radio" name="size" th:field="*{size}" value="L"/>
+                        <input type="radio" name="size" th:field="*{size}" value="1"/>
                         <span class="price">&nbsp;Ｌ</span
                         >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceL, 0 , 'COMMA')}">2,380</span>円(税抜)
                       </label>

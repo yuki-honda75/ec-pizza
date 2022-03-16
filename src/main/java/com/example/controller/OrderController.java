@@ -50,7 +50,12 @@ public class OrderController {
         
         orderItem.setItemId(form.getIntItemId());
         orderItem.setQuantity(form.getIntQuantity());
-        orderItem.setSize(form.getCharSize());
+        Integer size = form.getIntSizeNum();
+        if (size == 0) {
+            orderItem.setSize('M');
+        } else {
+            orderItem.setSize('L');
+        }
         //商品情報
         Item item = itemService.showDetail(orderItem.getItemId());
         orderItem.setItem(item);
@@ -78,12 +83,12 @@ public class OrderController {
                 orderItemList.add(orderItem);
                 order.setStatus(0);
                 order.setOrderItemList(orderItemList);
-                order.setTotalPrice(1);
+                order.setTotalPrice(order.getCalcTotalPrice());
             } else {
                 List<OrderItem> orderItemList = order.getOrderItemList();
                 orderItemList.add(orderItem);
                 order.setOrderItemList(orderItemList);
-                order.setTotalPrice(1);
+                order.setTotalPrice(order.getCalcTotalPrice());
                 
             }
             session.setAttribute("order", order);
@@ -98,10 +103,12 @@ public class OrderController {
                 order.setUserId(userId);
                 order.setStatus(0);
                 order.setOrderItemList(orderItemList);
-                order.setTotalPrice(1);
+                order.setTotalPrice(order.getCalcTotalPrice());
                 orderService.createCart(order);
             } else {
                 Integer orderId = order.getId();
+                Integer subTotalPrice = orderItem.getSubTotal();
+                orderService.setTotalPrice(subTotalPrice, orderId);
                 orderService.intoCart(orderItem, orderId);
             }
         }

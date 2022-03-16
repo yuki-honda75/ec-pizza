@@ -141,4 +141,16 @@ public class Order {
 				+ orderItemList + "]";
 	}
 
+	public int getTax() {
+		return getCalcTotalPrice() / 10;
+	}
+
+	public int getCalcTotalPrice() {
+		int total = 0;
+		for (OrderItem orderItem : orderItemList) {
+			total += orderItem.getSubTotal();
+		}
+		return total;
+	}
+
 }

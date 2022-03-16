@@ -25,8 +25,8 @@ public class InsertOrderForm {
 		return Integer.parseInt(quantity);
 	}
 
-	public Character getCharSize() {
-		return quantity.toCharArray()[0];
+	public Integer getIntSizeNum() {
+		return Integer.parseInt(size);
 	}
 
 	public String getItemId() {

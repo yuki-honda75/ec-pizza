@@ -28,4 +28,8 @@ public class OrderService {
     public void intoCart(OrderItem orderItem, Integer orderId) {
         orderRepository.insertOrderItem(orderItem, orderId);
     }
+
+    public void setTotalPrice(Integer subTotalPrice, Integer orderId) {
+        orderRepository.updateTotalPrice(subTotalPrice, orderId);
+    }
 }

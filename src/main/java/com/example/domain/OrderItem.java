@@ -76,4 +76,19 @@ public class OrderItem {
 				+ orderToppingList + "]";
 	}
 	
+	public int getSubTotal() {
+		int total = 0;
+		if (size == 'M') {
+			total += item.getPriceM();
+			for (OrderTopping orderTopping : orderToppingList) {
+				total += orderTopping.getTopping().getPriceM();
+			}
+		} else {
+			total += item.getPriceL();
+			for (OrderTopping orderTopping : orderToppingList) {
+				total += orderTopping.getTopping().getPriceL();
+			}
+		}
+		return total;
+	}
 }

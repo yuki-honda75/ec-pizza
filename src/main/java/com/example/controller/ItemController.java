@@ -61,7 +61,7 @@ public class ItemController {
 		Item item = itemService.showDetail(id);
 		model.addAttribute("item", item);
 		if (form.getSize() == null) {
-			form.setSize("M");
+			form.setSize("0");
 		}
 
 		return "item_detail";

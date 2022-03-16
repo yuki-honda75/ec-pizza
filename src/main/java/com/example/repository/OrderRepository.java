@@ -190,4 +190,16 @@ public class OrderRepository {
             template.update(orderToppingSql, param);
         }
     }
+
+    /**
+     * 合計金額の更新
+     * 
+     * @param totalPrice
+     */
+    public void updateTotalPrice(Integer subTotalPrice, Integer orderId) {
+        String sql = "UPDATE orders SET total_price=total_price + :totalPrice WHERE id=:id";
+        SqlParameterSource param = new MapSqlParameterSource().addValue("totalPrice", subTotalPrice).addValue("id", orderId);
+
+        template.update(sql, param);
+    }
 }
