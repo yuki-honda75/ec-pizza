@@ -44,7 +44,6 @@ public class OrderController {
 
     @RequestMapping("/incart")
     public String inCart(InsertOrderForm form, @AuthenticationPrincipal LoginUser loginUser) {
-        Order order = (Order) session.getAttribute("order");
         
         //注文商品情報を作成
         OrderItem orderItem = new OrderItem();
@@ -67,9 +66,11 @@ public class OrderController {
             }
         }
         orderItem.setOrderToppingList(orderToppingList);
-
+        
+        //ログイン状態で分岐
         if (loginUser == null) {
-            //ログインしていないとき
+            //ログインしていないとき（セッションに保存
+            Order order = (Order) session.getAttribute("order");
             
             if (order == null) {
                 order = new Order();
@@ -87,7 +88,22 @@ public class OrderController {
             }
             session.setAttribute("order", order);
         } else {
-            //ログインしているとき（データベース
+            //ログインしているとき（データベースに保存
+            Integer userId = loginUser.getUser().getId();
+            Order order = orderService.checkOrder(userId);
+            if (order == null) {
+                order = new Order();
+                List<OrderItem> orderItemList = new ArrayList<>();
+                orderItemList.add(orderItem);
+                order.setUserId(userId);
+                order.setStatus(0);
+                order.setOrderItemList(orderItemList);
+                order.setTotalPrice(1);
+                orderService.createCart(order);
+            } else {
+                Integer orderId = order.getId();
+                orderService.intoCart(orderItem, orderId);
+            }
         }
         return "redirect:/item/showList";
     }

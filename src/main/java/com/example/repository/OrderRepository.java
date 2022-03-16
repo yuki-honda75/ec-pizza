@@ -10,7 +10,9 @@ import com.example.domain.OrderTopping;
 import com.example.domain.Topping;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -86,14 +88,16 @@ public class OrderRepository {
 
                 orderToppingList.add(orderTopping);
             }
-
+            
             preOId = nowOId;
             preOIID = nowOIId;
         }
-
+        
         return orderList;
     };
     
+    private static final RowMapper<Order> ORDER_ROW_MAPPER = new BeanPropertyRowMapper<>(Order.class);
+
     /**
      * カートの存在チェック
      * 
@@ -103,13 +107,14 @@ public class OrderRepository {
     public Order findExistOrder(Integer userId) {
         String sql = "SELECT id FROM orders WHERE user_id=:userId AND status=0";
         SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
-        List<Order> orderList = template.query(sql, param, ORDER_RESULT_SET_EXTRACTOR);
+        List<Order> orderList = template.query(sql, param, ORDER_ROW_MAPPER);
         
         if (orderList.isEmpty()) {
             return null;
         }
         return orderList.get(0);
     }
+
 
     /**
      * 最初のカート作成
@@ -130,7 +135,6 @@ public class OrderRepository {
         if (!orderItemList.isEmpty()) {
             //ループ処理で注文商品の数だけ
             String orderItemSql = "INSERT INTO order_items (item_id, order_id, quantity, size) VALUES (:itemId,:orderId,:quantity,:size) RETURNING id";
-            String orderToppingSql = "INSERT INTO order_toppings (topping_id, order_item_id) VALUES";
             MapSqlParameterSource param2 = new MapSqlParameterSource();
             for (OrderItem orderItem : orderItemList) {
                 param2.addValue("itemId", orderItem.getItemId())
@@ -141,6 +145,7 @@ public class OrderRepository {
 
                 List<OrderTopping> toppingList = orderItem.getOrderToppingList();
                 if (!toppingList.isEmpty()) {
+                	String orderToppingSql = "INSERT INTO order_toppings (topping_id, order_item_id) VALUES";
                     for (int i = 0; i < toppingList.size(); i++) {
                         orderToppingSql += " (:toppingId" + i + ",:orderItemId)";
                         param2.addValue("toppingId" + i, toppingList.get(i).getToppingId());
@@ -164,18 +169,18 @@ public class OrderRepository {
     public void insertOrderItem(OrderItem orderItem, Integer orderId) {
 
         String orderItemSql = "INSERT INTO order_items (item_id, order_id, quantity, size) VALUES (:itemId,:orderId,:quantity,:size) RETURNING id";
-        String orderToppingSql = "INSERT INTO order_toppings (topping_id, order_item_id) VALUES";
         MapSqlParameterSource param = new MapSqlParameterSource();
         param.addValue("itemId", orderItem.getItemId())
         .addValue("orderId", orderId)
         .addValue("quantity", orderItem.getQuantity())
         .addValue("size", orderItem.getSize());
         Integer orderItemId = template.queryForObject(orderItemSql, param, Integer.class);
-
+        
         List<OrderTopping> toppingList = orderItem.getOrderToppingList();
         if (!toppingList.isEmpty()) {
+            String orderToppingSql = "INSERT INTO order_toppings (topping_id, order_item_id) VALUES";
             for (int i = 0; i < toppingList.size(); i++) {
-                orderToppingSql += " (:toppingId,:orderItemId)";
+                orderToppingSql += " (:toppingId" + i + ",:orderItemId)";
                 param.addValue("toppingId" + i, toppingList.get(i).getToppingId());
                 if (i < toppingList.size() - 1) {
                     orderToppingSql += ",";

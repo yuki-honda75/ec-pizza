@@ -93,9 +93,15 @@ public class ItemRepository {
 		String sql = "SELECT id,name,price_M,price_L FROM toppings";
 		String whereSql = " WHERE 1=1";
 		MapSqlParameterSource param = new MapSqlParameterSource();
+		int i = 0;
 		for (Integer toppingId : toppingIdList) {
-			whereSql += " OR id=:id" + toppingId;
-			param.addValue("id" + toppingId, toppingId);
+			if (i == 0) {
+				whereSql += " AND id=:id" + i;
+			} else {
+				whereSql += " OR id=:id" + i;
+			}
+			param.addValue("id" + i, toppingId);
+			i++;
 		}
 
 		return template.query(sql + whereSql, param, TOPPING_ROW_MAPPER);
