@@ -22,7 +22,6 @@ public class LoginUser extends org.springframework.security.core.userdetails.Use
 	 * @param authorityList
 	 */
 	public LoginUser(User user, Collection<GrantedAuthority> authorityList) {
-		// TODO 自動生成されたコンストラクター・スタブ
 		super(user.getEmail(), user.getPassword(), authorityList);
 		this.user = user;
 	}

@@ -1,5 +1,7 @@
 package com.example.service;
 
+import java.util.List;
+
 import com.example.domain.Order;
 import com.example.domain.OrderItem;
 import com.example.repository.OrderRepository;
@@ -29,7 +31,19 @@ public class OrderService {
         orderRepository.insertOrderItem(orderItem, orderId);
     }
 
-    public void setTotalPrice(Integer subTotalPrice, Integer orderId) {
-        orderRepository.updateTotalPrice(subTotalPrice, orderId);
+    public void setTotalPrice(Integer totalPrice, Integer orderId) {
+        orderRepository.updateTotalPrice(totalPrice, orderId);
+    }
+
+    public Order showCart(Integer userId) {
+        List<Order> orderList = orderRepository.findByUserIdAndStatus(userId, 0);
+        if (orderList == null) {
+            return null;
+        }
+        return orderList.get(0);
+    }
+
+    public List<Order> showHistory(Integer userId) {
+        return orderRepository.findByUserIdAndStatus(userId, null);
     }
 }

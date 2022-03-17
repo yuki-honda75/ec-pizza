@@ -89,6 +89,7 @@ public class OrderItem {
 				total += orderTopping.getTopping().getPriceL();
 			}
 		}
+		total *= quantity;
 		return total;
 	}
 }

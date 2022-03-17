@@ -21,15 +21,15 @@ public class Order {
 	/** 注文日 */
 	private Date orderDate;
 	/** 宛先氏名 */
-	private String desinationName;
+	private String destinationName;
 	/** 宛先Eメール */
-	private String desinationEmail;
+	private String destinationEmail;
 	/** 宛先郵便番号 */
-	private String desinationZipcode;
+	private String destinationZipcode;
 	/** 宛先住所 */
-	private String desinationAddress;
+	private String destinationAddress;
 	/** 宛先TEL */
-	private String desinationTel;
+	private String destinationTel;
 	/** 配達時間 */
 	private Timestamp deliveryTime;
 	/** 支払方法 */
@@ -69,35 +69,35 @@ public class Order {
 	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
 	}
-	public String getDesinationName() {
-		return desinationName;
+	public String getDestinationName() {
+		return destinationName;
 	}
-	public void setDesinationName(String desinationName) {
-		this.desinationName = desinationName;
+	public void setDestinationName(String destinationName) {
+		this.destinationName = destinationName;
 	}
-	public String getDesinationEmail() {
-		return desinationEmail;
+	public String getDestinationEmail() {
+		return destinationEmail;
 	}
-	public void setDesinationEmail(String desinationEmail) {
-		this.desinationEmail = desinationEmail;
+	public void setDestinationEmail(String destinationEmail) {
+		this.destinationEmail = destinationEmail;
 	}
-	public String getDesinationZipcode() {
-		return desinationZipcode;
+	public String getDestinationZipcode() {
+		return destinationZipcode;
 	}
-	public void setDesinationZipcode(String desinationZipcode) {
-		this.desinationZipcode = desinationZipcode;
+	public void setDestinationZipcode(String destinationZipcode) {
+		this.destinationZipcode = destinationZipcode;
 	}
-	public String getDesinationAddress() {
-		return desinationAddress;
+	public String getDestinationAddress() {
+		return destinationAddress;
 	}
-	public void setDesinationAddress(String desinationAddress) {
-		this.desinationAddress = desinationAddress;
+	public void setDestinationAddress(String destinationAddress) {
+		this.destinationAddress = destinationAddress;
 	}
-	public String getDesinationTel() {
-		return desinationTel;
+	public String getDestinationTel() {
+		return destinationTel;
 	}
-	public void setDesinationTel(String desinationTel) {
-		this.desinationTel = desinationTel;
+	public void setDestinationTel(String destinationTel) {
+		this.destinationTel = destinationTel;
 	}
 	public Timestamp getDeliveryTime() {
 		return deliveryTime;
@@ -130,11 +130,11 @@ public class Order {
 		return "Order [id=" + id + ", userId=" + userId
 				+ ", status=" + status + ", totalPrice="
 				+ totalPrice + ", orderDate=" + orderDate
-				+ ", desinationName=" + desinationName
-				+ ", desinationEmail=" + desinationEmail
-				+ ", desinationZipcode=" + desinationZipcode
-				+ ", desinationAddress=" + desinationAddress
-				+ ", desinationTel=" + desinationTel
+				+ ", desinationName=" + destinationName
+				+ ", desinationEmail=" + destinationEmail
+				+ ", desinationZipcode=" + destinationZipcode
+				+ ", desinationAddress=" + destinationAddress
+				+ ", desinationTel=" + destinationTel
 				+ ", deliveryTime=" + deliveryTime
 				+ ", paymentMethod=" + paymentMethod
 				+ ", user=" + user + ", orderItemList="
