@@ -117,6 +117,13 @@ public class OrderController {
         return "redirect:/item/showList";
     }
 
+    /**
+     * カートの中身を表示する
+     * 
+     * @param loginUser
+     * @param model
+     * @return
+     */
     @RequestMapping("/cartList")
     public String cartList(@AuthenticationPrincipal LoginUser loginUser, Model model) {
         Order order = null;
@@ -127,5 +134,13 @@ public class OrderController {
         }
         model.addAttribute("order", order);
         return "cart_list";
+    }
+
+    @RequestMapping("/confirm")
+    public String confirm(Integer orderId, Model model) {
+        Order order = orderService.cartConfirm(orderId);
+        
+        model.addAttribute("order", order);
+        return "order_confirm";
     }
 }
