@@ -42,6 +42,10 @@ public class OrderController {
         return new InsertOrderForm();
     }
 
+    /**
+     * カート追加処理
+     * 
+     */
     @RequestMapping("/incart")
     public String inCart(InsertOrderForm form, @AuthenticationPrincipal LoginUser loginUser) {
         
@@ -77,20 +81,17 @@ public class OrderController {
             //ログインしていないとき（セッションに保存
             Order order = (Order) session.getAttribute("order");
             
+            List<OrderItem> orderItemList = null;
             if (order == null) {
                 order = new Order();
-                List<OrderItem> orderItemList = new ArrayList<>();
-                orderItemList.add(orderItem);
                 order.setStatus(0);
-                order.setOrderItemList(orderItemList);
-                order.setTotalPrice(order.getCalcTotalPrice());
+                orderItemList = new ArrayList<>();
             } else {
-                List<OrderItem> orderItemList = order.getOrderItemList();
-                orderItemList.add(orderItem);
-                order.setOrderItemList(orderItemList);
-                order.setTotalPrice(order.getCalcTotalPrice());
-                
+                orderItemList = order.getOrderItemList();
             }
+            orderItemList.add(orderItem);
+            order.setOrderItemList(orderItemList);
+            order.setTotalPrice(order.getCalcTotalPrice() + order.getTax());
             session.setAttribute("order", order);
         } else {
             //ログインしているとき（データベースに保存
@@ -103,7 +104,7 @@ public class OrderController {
                 order.setUserId(userId);
                 order.setStatus(0);
                 order.setOrderItemList(orderItemList);
-                order.setTotalPrice(order.getCalcTotalPrice());
+                order.setTotalPrice(order.getCalcTotalPrice() + order.getTax());
                 orderService.createCart(order);
             } else {
                 Integer orderId = order.getId();
@@ -113,5 +114,12 @@ public class OrderController {
             }
         }
         return "redirect:/item/showList";
+    }
+
+    @RequestMapping("/cartList")
+    public String cartList(Model model) {
+        Order order = (Order)session.getAttribute("order");
+        model.addAttribute("order", order);
+        return "cart_list";
     }
 }

@@ -105,7 +105,7 @@ public class OrderRepository {
      * @return
      */
     public Order findExistOrder(Integer userId) {
-        String sql = "SELECT id FROM orders WHERE user_id=:userId AND status=0";
+        String sql = "SELECT id,total_price FROM orders WHERE user_id=:userId AND status=0";
         SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
         List<Order> orderList = template.query(sql, param, ORDER_ROW_MAPPER);
         
