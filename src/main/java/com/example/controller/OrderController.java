@@ -136,11 +136,23 @@ public class OrderController {
         return "cart_list";
     }
 
+    /**
+     * 注文確認画面を表示する
+     * 
+     * @param orderId
+     * @param model
+     * @return
+     */
     @RequestMapping("/confirm")
     public String confirm(Integer orderId, Model model) {
         Order order = orderService.cartConfirm(orderId);
         
         model.addAttribute("order", order);
         return "order_confirm";
+    }
+
+    @RequestMapping("/post")
+    public String order() {
+        return "redirect:/order/finished";
     }
 }
