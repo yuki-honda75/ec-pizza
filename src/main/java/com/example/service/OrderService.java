@@ -31,12 +31,16 @@ public class OrderService {
         orderRepository.insertOrderItem(orderItem, orderId);
     }
 
-    public void setTotalPrice(Integer subTotalPrice, Integer orderId) {
-        orderRepository.updateTotalPrice(subTotalPrice, orderId);
+    public void setTotalPrice(Integer totalPrice, Integer orderId) {
+        orderRepository.updateTotalPrice(totalPrice, orderId);
     }
 
     public Order showCart(Integer userId) {
-        return orderRepository.findByUserIdAndStatus(userId, 0).get(0);
+        List<Order> orderList = orderRepository.findByUserIdAndStatus(userId, 0);
+        if (orderList == null) {
+            return null;
+        }
+        return orderList.get(0);
     }
 
     public List<Order> showHistory(Integer userId) {

@@ -46,15 +46,16 @@ public class OrderRepository {
                 order.setStatus(rs.getInt("status"));
                 order.setTotalPrice(rs.getInt("total_price"));
                 order.setOrderDate(rs.getDate("order_date"));
-                order.setDesinationName(rs.getString("desination_name"));
-                order.setDesinationEmail(rs.getString("desination_email"));
-                order.setDesinationZipcode(rs.getString("desination_zipcode"));
-                order.setDesinationAddress(rs.getString("desination_address"));
-                order.setDesinationTel(rs.getString("desination_tel"));
+                order.setDestinationName(rs.getString("destination_name"));
+                order.setDestinationEmail(rs.getString("destination_email"));
+                order.setDestinationZipcode(rs.getString("destination_zipcode"));
+                order.setDestinationAddress(rs.getString("destination_address"));
+                order.setDestinationTel(rs.getString("destination_tel"));
                 order.setDeliveryTime(rs.getTimestamp("delivery_time"));
                 order.setPaymentMethod(rs.getInt("payment_method"));
                 orderItemList = new ArrayList<>();
                 order.setOrderItemList(orderItemList);
+                orderList.add(order);
             }
 
             if (preOIID != nowOIId) {
@@ -66,8 +67,8 @@ public class OrderRepository {
                 Item item = new Item();
                 item.setName(rs.getString("item_name"));
                 item.setDescription(rs.getString("description"));
-                item.setPriceM(rs.getInt("price_M"));
-                item.setPriceL(rs.getInt("price_L"));
+                item.setPriceM(rs.getInt("item_price_M"));
+                item.setPriceL(rs.getInt("item_price_L"));
                 item.setImagePath(rs.getString("image_path"));
                 orderItem.setItem(item);
                 orderToppingList = new ArrayList<>();
@@ -82,8 +83,8 @@ public class OrderRepository {
                 orderTopping.setToppingId(rs.getInt("topping_id"));
                 Topping topping = new Topping();
                 topping.setName(rs.getString("topping_name"));
-                topping.setPriceM(rs.getInt("price_M"));
-                topping.setPriceL(rs.getInt("price_L"));
+                topping.setPriceM(rs.getInt("topping_price_M"));
+                topping.setPriceL(rs.getInt("topping_price_L"));
                 orderTopping.setTopping(topping);
 
                 orderToppingList.add(orderTopping);
@@ -196,21 +197,33 @@ public class OrderRepository {
      * 
      * @param totalPrice
      */
-    public void updateTotalPrice(Integer subTotalPrice, Integer orderId) {
-        String sql = "UPDATE orders SET total_price=total_price + :totalPrice WHERE id=:id";
-        SqlParameterSource param = new MapSqlParameterSource().addValue("totalPrice", subTotalPrice).addValue("id", orderId);
+    public void updateTotalPrice(Integer totalPrice, Integer orderId) {
+        String sql = "UPDATE orders SET total_price=:totalPrice WHERE id=:id";
+        SqlParameterSource param = new MapSqlParameterSource().addValue("totalPrice", totalPrice).addValue("id", orderId);
 
         template.update(sql, param);
     }
 
+    /**
+     * ユーザIDと状態から検索
+     * 
+     * @param userId
+     * @param status
+     * @return
+     */
     public List<Order> findByUserIdAndStatus(Integer userId, Integer status) {
         String sql = "SELECT"
-        		+ " order_id, user_id, status, total_price, order_date, desination_name, desination_email,"
-        		+ " desination_zipcode, desination_name, desination_address, desination_tel, delivery_time, payment_method,"
+        		+ " order_id, user_id, status, total_price, order_date, destination_name, destination_email,"
+        		+ " destination_zipcode, destination_address, destination_tel, delivery_time, payment_method,"
         		+ " oi.id as order_item_id, item_id, quantity, size,"
         		+ " i.name as item_name, description, i.price_M as item_price_M, i.price_L as item_price_L, image_path,"
         		+ " ot.id as order_topping_id, topping_id,"
         		+ " t.name as topping_name, t.price_M as topping_price_M, t.price_L as topping_price_L"
+        		+ " FROM orders as o"
+        		+ " LEFT OUTER JOIN order_items as oi ON o.id=oi.order_id"
+        		+ " LEFT OUTER JOIN items as i ON i.id=oi.item_id"
+        		+ " LEFT OUTER JOIN order_toppings as ot ON oi.id=ot.order_item_id"
+        		+ " LEFT OUTER JOIN toppings as t ON t.id=ot.topping_id"
         		+ " WHERE user_id=:userId";
         MapSqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
         if (status == 0) {
