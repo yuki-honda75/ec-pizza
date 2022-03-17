@@ -144,7 +144,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
       </div>
 
       <!-- table -->
-      <form action="order_finished.html">
+      <form action="order_finished.html" th:action="@{/order/post}" th:object="${updateOrderForm}">
         <div class="row">
           <div
             class="
@@ -165,7 +165,16 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                     <div class="text-center">お名前</div>
                   </td>
                   <td>
-                    <input type="text" />
+                    <div>
+                      <label
+                        class="control-label"
+                        style="color: red"
+                        for="inputPeriod"
+                        th:errors="*{destinationName}"
+                        >配達日時を入力してください</label
+                      >
+                    </div>
+                    <input type="text" th:field="*{destinationName}"/>
                   </td>
                 </tr>
                 <tr>
@@ -173,7 +182,16 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                     <div class="text-center">メールアドレス</div>
                   </td>
                   <td>
-                    <input type="text" />
+                    <div>
+                      <label
+                        class="control-label"
+                        style="color: red"
+                        for="inputPeriod"
+                        th:errors="*{destinationEmail}"
+                        >配達日時を入力してください</label
+                      >
+                    </div>
+                    <input type="text" th:field="*{destinationEmail}"/>
                   </td>
                 </tr>
                 <tr>
@@ -181,7 +199,16 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                     <div class="text-center">郵便番号</div>
                   </td>
                   <td>
-                    <input type="text" />&nbsp;&nbsp;<button>住所検索</button>
+                    <div>
+                      <label
+                        class="control-label"
+                        style="color: red"
+                        for="inputPeriod"
+                        th:errors="*{destinationZipcode}"
+                        >配達日時を入力してください</label
+                      >
+                    </div>
+                    <input type="text" th:field="*{destinationZipcode}"/>&nbsp;&nbsp;<button>住所検索</button>
                   </td>
                 </tr>
                 <tr>
@@ -189,7 +216,16 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                     <div class="text-center">住所</div>
                   </td>
                   <td>
-                    <input type="text" />
+                    <div>
+                      <label
+                        class="control-label"
+                        style="color: red"
+                        for="inputPeriod"
+                        th:errors="*{destinationAddress}"
+                        >配達日時を入力してください</label
+                      >
+                    </div>
+                    <input type="text" th:field="*{destinationAddress}"/>
                   </td>
                 </tr>
                 <tr>
@@ -197,7 +233,16 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                     <div class="text-center">電話番号</div>
                   </td>
                   <td>
-                    <input type="text" />
+                    <div>
+                      <label
+                        class="control-label"
+                        style="color: red"
+                        for="inputPeriod"
+                        th:errors="*{destinationTel}"
+                        >配達日時を入力してください</label
+                      >
+                    </div>
+                    <input type="text" th:field="*{destinationTel}"/>
                   </td>
                 </tr>
                 <tr>
@@ -212,13 +257,15 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                             class="control-label"
                             style="color: red"
                             for="inputPeriod"
+                            th:field="*{deliveryDate}"
                             >配達日時を入力してください</label
                           >
                         </div>
-                        <div class="col-sm-5">
+                        <div class="col-sm-8">
                           <input
                             type="date"
                             name="name"
+                            th:field="*{deliveryDate}"
                             id="name"
                             class="form-control input-sm"
                           />
@@ -230,40 +277,41 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                             <input
                               type="radio"
                               name="responsibleCompany"
-                              checked="checked"
+                              th:field="*{deliveryTime}"
+                              th:value="10"
                             />
                             10時
                           </label>
                           <label class="radio-inline">
-                            <input type="radio" name="responsibleCompany" />
+                            <input type="radio" name="responsibleCompany" th:field="*{deliveryTime}" th:value="11"/>
                             11時
                           </label>
                           <label class="radio-inline">
-                            <input type="radio" name="responsibleCompany" />
+                            <input type="radio" name="responsibleCompany" th:field="*{deliveryTime}" th:value="12"/>
                             12時 </label
                           ><br />
                           <label class="radio-inline">
-                            <input type="radio" name="responsibleCompany" />
+                            <input type="radio" name="responsibleCompany" th:field="*{deliveryTime}" th:value="13"/>
                             13時
                           </label>
                           <label class="radio-inline">
-                            <input type="radio" name="responsibleCompany" />
+                            <input type="radio" name="responsibleCompany" th:field="*{deliveryTime}" th:value="14"/>
                             14時
                           </label>
                           <label class="radio-inline">
-                            <input type="radio" name="responsibleCompany" />
+                            <input type="radio" name="responsibleCompany" th:field="*{deliveryTime}" th:value="15"/>
                             15時 </label
                           ><br />
                           <label class="radio-inline">
-                            <input type="radio" name="responsibleCompany" />
+                            <input type="radio" name="responsibleCompany" th:field="*{deliveryTime}" th:value="16"/>
                             16時
                           </label>
                           <label class="radio-inline">
-                            <input type="radio" name="responsibleCompany" />
+                            <input type="radio" name="responsibleCompany" th:field="*{deliveryTime}" th:value="17"/>
                             17時
                           </label>
                           <label class="radio-inline">
-                            <input type="radio" name="responsibleCompany" />
+                            <input type="radio" name="responsibleCompany" th:field="*{deliveryTime}" th:value="18"/>
                             18時 </label
                           ><br />
                         </div>
@@ -303,7 +351,8 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                           <input
                             type="radio"
                             name="responsibleCompany"
-                            checked="checked"
+                            th:field="*{paymentMethod}"
+                            th:value="1"
                           />
                           代金引換
                         </label>
@@ -322,7 +371,8 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                           <input
                             type="radio"
                             name="responsibleCompany"
-                            checked="checked"
+                            th:field="*{paymentMethod}"
+                            th:value="2"
                           />
                           クレジットカード </label
                         ><br /><br />
@@ -342,6 +392,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                 type="submit"
                 value="この内容で注文する"
               />
+              <input type="hidden" name="orderId" th:value="${order.id}">
             </div>
           </div>
         </div>

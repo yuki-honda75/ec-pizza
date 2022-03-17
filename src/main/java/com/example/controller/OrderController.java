@@ -1,7 +1,12 @@
 package com.example.controller;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpSession;
 
@@ -12,13 +17,17 @@ import com.example.domain.OrderItem;
 import com.example.domain.OrderTopping;
 import com.example.domain.Topping;
 import com.example.form.InsertOrderForm;
+import com.example.form.UpdateOrderForm;
 import com.example.service.ItemService;
 import com.example.service.OrderService;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -40,6 +49,10 @@ public class OrderController {
     @ModelAttribute
     public InsertOrderForm setUpInsertOrderForm() {
         return new InsertOrderForm();
+    }
+    @ModelAttribute
+    public UpdateOrderForm setUpUpdateOrderForm() {
+        return new UpdateOrderForm();
     }
 
     /**
@@ -144,15 +157,61 @@ public class OrderController {
      * @return
      */
     @RequestMapping("/confirm")
-    public String confirm(Integer orderId, Model model) {
+    public String confirm(UpdateOrderForm form, Integer orderId, Model model) {
         Order order = orderService.cartConfirm(orderId);
-        
+        if (form.getDeliveryTime() == null) {
+            form.setDeliveryTime("10");
+        }
+        if (form.getPaymentMethod() == null) {
+            form.setPaymentMethod("1");
+        }
         model.addAttribute("order", order);
         return "order_confirm";
     }
 
     @RequestMapping("/post")
-    public String order() {
+    public String order(Integer orderId, @Validated UpdateOrderForm form, BindingResult result,Model model) throws ParseException {
+        //送信時の日付をlong型で取得
+		long today = new Date().getTime();
+		
+		//入力された日付と時刻を文字列として結合したあとにlong型でフォーマット
+		long delivaryDateTimeLong = 0;
+        
+        if (!form.getDeliveryDate().isEmpty()) {
+			String delivaryDateTime = form.getDeliveryDate() + " " + form.getDeliveryTime();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh");
+			delivaryDateTimeLong = sdf.parse(delivaryDateTime).getTime();
+			
+			//時刻を比較して時間差を抽出
+			long diff = delivaryDateTimeLong - today;
+			TimeUnit time = TimeUnit.HOURS;
+			long difference = time.convert(diff, TimeUnit.MILLISECONDS);
+			
+			//時間差が3時間より小さけれればエラー文を格納
+			if (difference < 3) {
+				result.rejectValue("deliveryDate", null, "今から3時間後の日時をご入力ください");
+			}
+            
+        }
+        
+        if (result.hasErrors()) {
+            return confirm(form, orderId, model);
+        }
+
+        java.sql.Date sqldDate = new java.sql.Date(today);
+        Timestamp deliveryTimestamp = new Timestamp(delivaryDateTimeLong);
+
+        Order order = new Order();
+        BeanUtils.copyProperties(form, order);
+        order.setOrderDate(sqldDate);
+        order.setDeliveryTime(deliveryTimestamp);
+        order.setPaymentMethod(form.getIntPaymentmethod());
+        if (order.getPaymentMethod() == 1) {
+            order.setStatus(1);
+        } else if (order.getPaymentMethod() == 2) {
+            order.setStatus(2);
+        }
+
         return "redirect:/order/finished";
     }
 }

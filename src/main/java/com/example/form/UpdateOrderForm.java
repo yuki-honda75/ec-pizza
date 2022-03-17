@@ -32,11 +32,15 @@ public class UpdateOrderForm {
 	private String destinationTel;
 	/** 配達日 */
     @NotBlank(message = "配達日時を入力して下さい")
-	private Date deliveryDate;
+	private String deliveryDate;
     /** 配達時間 */
 	private String deliveryTime;
     /** 支払方法 */
     private String paymentMethod;
+
+    public Integer getIntPaymentmethod() {
+        return Integer.parseInt(paymentMethod);
+    }
 
     public String getDestinationName() {
         return destinationName;
@@ -78,11 +82,11 @@ public class UpdateOrderForm {
         this.destinationTel = destinationTel;
     }
 
-    public Date getDeliveryDate() {
+    public String getDeliveryDate() {
         return deliveryDate;
     }
 
-    public void setDeliveryDate(Date deliveryDate) {
+    public void setDeliveryDate(String deliveryDate) {
         this.deliveryDate = deliveryDate;
     }
 
