@@ -37,7 +37,7 @@ public class OrderRepository {
 
         while (rs.next()) {
             int nowOId = rs.getInt("order_id");
-            int nowOIId = rs.getInt("order_topping_id");
+            int nowOIId = rs.getInt("order_item_id");
 
             if (preOId != nowOId) {
                 Order order = new Order();
@@ -201,5 +201,29 @@ public class OrderRepository {
         SqlParameterSource param = new MapSqlParameterSource().addValue("totalPrice", subTotalPrice).addValue("id", orderId);
 
         template.update(sql, param);
+    }
+
+    public List<Order> findByUserIdAndStatus(Integer userId, Integer status) {
+        String sql = "SELECT"
+        		+ " order_id, user_id, status, total_price, order_date, desination_name, desination_email,"
+        		+ " desination_zipcode, desination_name, desination_address, desination_tel, delivery_time, payment_method,"
+        		+ " oi.id as order_item_id, item_id, quantity, size,"
+        		+ " i.name as item_name, description, i.price_M as item_price_M, i.price_L as item_price_L, image_path,"
+        		+ " ot.id as order_topping_id, topping_id,"
+        		+ " t.name as topping_name, t.price_M as topping_price_M, t.price_L as topping_price_L"
+        		+ " WHERE user_id=:userId";
+        MapSqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
+        if (status == 0) {
+            sql += " AND status=:status";
+            param.addValue("status", status);
+        } else if(status == null) {
+            sql += " AND status!=0";
+        }
+        List<Order> orderList = template.query(sql, param, ORDER_RESULT_SET_EXTRACTOR);
+        
+        if (orderList.isEmpty()) {
+            return null;
+        }
+        return orderList;
     }
 }
