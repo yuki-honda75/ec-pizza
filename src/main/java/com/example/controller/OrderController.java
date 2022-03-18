@@ -256,7 +256,16 @@ public class OrderController {
     }
 
     @RequestMapping("/remove")
-    public String removeOrderItem(Integer orderItemId) {
+    public String removeOrderItem(@AuthenticationPrincipal LoginUser loginUser, Integer orderItemId, int index) {
+    	
+        if (loginUser == null) {
+            Order order = (Order)session.getAttribute("order");
+            List<OrderItem> orderItemList = order.getOrderItemList();
+            orderItemList.remove(index);
+        } else {
+            orderService.removeOrderItem(orderItemId);
+        }
+
         return "redirect:/order/cartList";
     }
 }

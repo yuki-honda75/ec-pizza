@@ -62,7 +62,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
       <!-- table -->
       <p th:if="${order == null || #lists.isEmpty(order.orderItemList)}" th:text="カートに商品がありません"></p>
-      <th:block th:if="${order != null}">
+      <th:block th:unless="${order == null || #lists.isEmpty(order.orderItemList)}">
         <div class="row">
           <div
             class="
@@ -93,7 +93,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                   </th>
                   <th></th>
                 </tr>
-                <tr th:each="orderItem : ${order.orderItemList}">
+                <tr th:each="orderItem,status : ${order.orderItemList}">
                   <td>
                     <div class="center">
                       <img
@@ -133,7 +133,11 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                   </td>
                   <td>
                     <div class="text-center">
-                      <a href="" th:href="@{/order/remove?orderItemId=} + ${orderItem.id}"><button type="submit" class="btn btn-primary">削除</button></a>
+                      <form action="" th:action="@{/order/remove}" method="post">
+                        <button type="submit" class="btn btn-primary">削除</button>
+                        <input type="hidden" name="orderItemId" th:value="${orderItem.id}">
+                        <input type="hidden" name="index" th:value="${status.index}">
+                      </form>
                     </div>
                   </td>
                 </tr>

@@ -3,6 +3,8 @@ package com.example.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.Null;
+
 import com.example.domain.Item;
 import com.example.domain.Order;
 import com.example.domain.OrderItem;
@@ -18,6 +20,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 
@@ -64,7 +67,11 @@ public class OrderRepository {
                 orderItem.setId(nowOIId);
                 orderItem.setItemId(rs.getInt("item_id"));
                 orderItem.setQuantity(rs.getInt("quantity"));
-                orderItem.setSize(rs.getString("size").toCharArray()[0]);
+                Character size = null;
+                if (rs.getString("size") != null) {
+                    size = rs.getString("size").toCharArray()[0];
+                }
+                orderItem.setSize(size);
                 Item item = new Item();
                 item.setName(rs.getString("item_name"));
                 item.setDescription(rs.getString("description"));
@@ -123,6 +130,7 @@ public class OrderRepository {
      * 
      * @param order
      */
+    @Transactional
     public void insert(Order order) {
         String sql = "INSERT INTO orders (user_id, status, total_price) VALUES (:userId, :status, :totalPrice) RETURNING id";
         SqlParameterSource param = new MapSqlParameterSource()
@@ -168,6 +176,7 @@ public class OrderRepository {
      * @param orderItem
      * @param orderId
      */
+    @Transactional
     public void insertOrderItem(OrderItem orderItem, Integer orderId) {
 
         String orderItemSql = "INSERT INTO order_items (item_id, order_id, quantity, size) VALUES (:itemId,:orderId,:quantity,:size) RETURNING id";
@@ -276,8 +285,11 @@ public class OrderRepository {
      * 
      * @param orderItemId
      */
+    @Transactional
     public void deleteOrderItem(Integer orderItemId) {
-        String sql = "DLETE FROM order_items WHERE id=:orderItemId";
+        String sql = "DELETE FROM order_items WHERE id=:orderItemId;"
+        + "DELETE FROM order_toppings WHERE order_item_id=:orderItemId;";
+
         SqlParameterSource param = new MapSqlParameterSource().addValue("orderItemId", orderItemId);
 
         template.update(sql, param);
