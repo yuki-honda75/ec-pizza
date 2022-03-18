@@ -55,4 +55,7 @@ public class OrderService {
     public void updateOrder(Order order) {
         orderRepository.update(order);
     }
+    public void removeOrderItem(Integer orderItemId) {
+        orderRepository.deleteOrderItem(orderItemId);
+    }
 }
