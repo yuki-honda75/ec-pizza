@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.el.ELException;
 import javax.servlet.http.HttpSession;
 
 import com.example.domain.Item;
@@ -178,9 +179,10 @@ public class OrderController {
      * @param model
      * @return
      * @throws ParseException
+     * @throws Exception
      */
     @RequestMapping("/post")
-    public String order(@Validated UpdateOrderForm form, BindingResult result,Model model) throws ParseException {
+    public String order(@AuthenticationPrincipal LoginUser loginUser, @Validated UpdateOrderForm form, BindingResult result,Model model) throws ParseException {
         //送信時の日付をlong型で取得
 		long today = new Date().getTime();
 		
@@ -211,7 +213,10 @@ public class OrderController {
         java.sql.Date sqldDate = new java.sql.Date(today);
         Timestamp deliveryTimestamp = new Timestamp(delivaryDateTimeLong);
 
-        Order order = new Order();
+        Order order = orderService.showCart(loginUser.getUser().getId());
+        if (order == null) {
+            return "redirect:/order/showCart";
+        }
         BeanUtils.copyProperties(form, order);
         order.setOrderDate(sqldDate);
         order.setDeliveryTime(deliveryTimestamp);
