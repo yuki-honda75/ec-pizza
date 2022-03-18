@@ -170,6 +170,15 @@ public class OrderController {
         return "order_confirm";
     }
 
+    /**
+     * 注文を確定する
+     * 
+     * @param form
+     * @param result
+     * @param model
+     * @return
+     * @throws ParseException
+     */
     @RequestMapping("/post")
     public String order(@Validated UpdateOrderForm form, BindingResult result,Model model) throws ParseException {
         //送信時の日付をlong型で取得
@@ -217,8 +226,32 @@ public class OrderController {
         return "redirect:/order/finished";
     }
 
+    /**
+     * 注文完了画面を表示する
+     * 
+     * @return
+     */
     @RequestMapping("/finished")
     public String finished() {
         return "order_finished";
+    }
+
+    /**
+     * 注文履歴を表示する
+     * 
+     * @param loginUser
+     * @param model
+     * @return
+     */
+    @RequestMapping("/history")
+    public String showHistory(@AuthenticationPrincipal LoginUser loginUser, Model model) {
+        
+        if (loginUser == null) {
+            
+        }
+        List<Order> orderList = orderService.showHistory(loginUser.getUser().getId());
+        model.addAttribute("orderList", orderList);
+
+        return "order_history";
     }
 }

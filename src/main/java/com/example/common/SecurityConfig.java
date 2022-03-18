@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		//ログイン画面と新規登録画面を許可
 		http.authorizeRequests()
-		.antMatchers("/order/confirm", "/order/histroy").authenticated()
+		.antMatchers("/order/confirm", "/order/history").authenticated()
 		.anyRequest().permitAll();
 		
 		//ログイン設定
