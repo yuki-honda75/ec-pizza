@@ -1,6 +1,5 @@
 package com.example.form;
 
-import java.util.Date;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -12,6 +11,8 @@ import javax.validation.constraints.Pattern;
  *
  */
 public class UpdateOrderForm {
+    /** ID */
+    private Integer id;
 	/** 宛先氏名 */
     @NotBlank(message = "名前を入力して下さい")
 	private String destinationName;
@@ -40,6 +41,14 @@ public class UpdateOrderForm {
 
     public Integer getIntPaymentmethod() {
         return Integer.parseInt(paymentMethod);
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getDestinationName() {
@@ -108,11 +117,14 @@ public class UpdateOrderForm {
 
     @Override
     public String toString() {
-        return "UpdateOrderForm [deliveryTime=" + deliveryTime + ", destinationAddress=" + destinationAddress
-                + ", destinationEmail=" + destinationEmail + ", destinationName=" + destinationName
-                + ", destinationTel=" + destinationTel + ", destinationZipcode=" + destinationZipcode + ", orderDate="
-                + ", paymentMethod=" + paymentMethod + "]";
+        return "UpdateOrderForm [deliveryDate=" + deliveryDate + ", deliveryTime=" + deliveryTime
+                + ", destinationAddress=" + destinationAddress + ", destinationEmail=" + destinationEmail
+                + ", destinationName=" + destinationName + ", destinationTel=" + destinationTel
+                + ", destinationZipcode=" + destinationZipcode + ", id=" + id + ", paymentMethod=" + paymentMethod
+                + "]";
     }
+
+    
 
     
 

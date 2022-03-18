@@ -51,4 +51,8 @@ public class OrderService {
         List<Order> orderList = orderRepository.findByCondision(orderId, null, 0);
         return orderList.get(0);
     }
+
+    public void updateOrder(Order order) {
+        orderRepository.update(order);
+    }
 }

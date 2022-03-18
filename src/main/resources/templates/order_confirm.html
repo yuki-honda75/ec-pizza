@@ -257,7 +257,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                             class="control-label"
                             style="color: red"
                             for="inputPeriod"
-                            th:field="*{deliveryDate}"
+                            th:errors="*{deliveryDate}"
                             >配達日時を入力してください</label
                           >
                         </div>
@@ -392,7 +392,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                 type="submit"
                 value="この内容で注文する"
               />
-              <input type="hidden" name="orderId" th:value="${order.id}">
+              <input type="hidden" name="id" th:value="${order.id}">
             </div>
           </div>
         </div>

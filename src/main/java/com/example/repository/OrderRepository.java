@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -246,5 +247,22 @@ public class OrderRepository {
             return null;
         }
         return orderList;
+    }
+
+    public void update(Order order) {
+        String sql = "UPDATE orders SET"
+        		+ " status=:status,"
+        		+ " order_date=:orderDate,"
+        		+ " destination_name=:destinationName,"
+        		+ " destination_email=:destinationEmail,"
+        		+ " destination_zipcode=:destinationZipcode,"
+        		+ " destination_address=:destinationAddress,"
+        		+ " destination_tel=:destinationTel,"
+        		+ " delivery_time=:deliveryTime,"
+        		+ " payment_method=:paymentMethod"
+        		+ " WHERE id=:id";
+        SqlParameterSource param = new BeanPropertySqlParameterSource(order);
+
+        template.update(sql, param);
     }
 }

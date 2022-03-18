@@ -165,12 +165,13 @@ public class OrderController {
         if (form.getPaymentMethod() == null) {
             form.setPaymentMethod("1");
         }
+        
         model.addAttribute("order", order);
         return "order_confirm";
     }
 
     @RequestMapping("/post")
-    public String order(Integer orderId, @Validated UpdateOrderForm form, BindingResult result,Model model) throws ParseException {
+    public String order(@Validated UpdateOrderForm form, BindingResult result,Model model) throws ParseException {
         //送信時の日付をlong型で取得
 		long today = new Date().getTime();
 		
@@ -195,7 +196,7 @@ public class OrderController {
         }
         
         if (result.hasErrors()) {
-            return confirm(form, orderId, model);
+            return confirm(form, form.getId(), model);
         }
 
         java.sql.Date sqldDate = new java.sql.Date(today);
@@ -211,7 +212,13 @@ public class OrderController {
         } else if (order.getPaymentMethod() == 2) {
             order.setStatus(2);
         }
+        orderService.updateOrder(order);
 
         return "redirect:/order/finished";
+    }
+
+    @RequestMapping("/finished")
+    public String finished() {
+        return "order_finished";
     }
 }
