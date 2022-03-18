@@ -207,8 +207,15 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                         th:errors="*{destinationZipcode}"
                         >配達日時を入力してください</label
                       >
+                      <label
+                        class="control-label"
+                        id="zipcode_error"
+                        style="color: red"
+                        for="inputError"
+                        ></label
+                      >
                     </div>
-                    <input type="text" th:field="*{destinationZipcode}"/>&nbsp;&nbsp;<button>住所検索</button>
+                    <input id="zipcode" type="text" th:field="*{destinationZipcode}"/>&nbsp;&nbsp;<button id="zipcode_btn">住所検索</button>
                   </td>
                 </tr>
                 <tr>
@@ -225,7 +232,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                         >配達日時を入力してください</label
                       >
                     </div>
-                    <input type="text" th:field="*{destinationAddress}"/>
+                    <input id="address" type="text" th:field="*{destinationAddress}"/>
                   </td>
                 </tr>
                 <tr>
@@ -399,7 +406,9 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
       </form>
     </div>
     <!-- end container -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+    <script th:src="@{/js/jquery.js}"></script>
+    <script th:src="@{/js/ec-pizza.js}"></script>
     <script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
   </body>
 </html>
