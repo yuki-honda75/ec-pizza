@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -211,7 +212,7 @@ public class OrderRepository {
      * @param status
      * @return
      */
-    public List<Order> findByUserIdAndStatus(Integer userId, Integer status) {
+    public List<Order> findByCondision(Integer orderId, Integer userId, Integer status) {
         String sql = "SELECT"
         		+ " order_id, user_id, status, total_price, order_date, destination_name, destination_email,"
         		+ " destination_zipcode, destination_address, destination_tel, delivery_time, payment_method,"
@@ -224,8 +225,16 @@ public class OrderRepository {
         		+ " LEFT OUTER JOIN items as i ON i.id=oi.item_id"
         		+ " LEFT OUTER JOIN order_toppings as ot ON oi.id=ot.order_item_id"
         		+ " LEFT OUTER JOIN toppings as t ON t.id=ot.topping_id"
-        		+ " WHERE user_id=:userId";
-        MapSqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
+        		+ " WHERE 1=1";
+        MapSqlParameterSource param = new MapSqlParameterSource();
+        if (orderId != null) {
+            sql += " AND o.id=:orderId";
+            param.addValue("orderId", orderId);
+        }
+        if (userId != null) {
+            sql += " AND user_id=:userId";
+            param.addValue("userId", userId);
+        }
         if (status == 0) {
             sql += " AND status=:status";
             param.addValue("status", status);
@@ -238,5 +247,22 @@ public class OrderRepository {
             return null;
         }
         return orderList;
+    }
+
+    public void update(Order order) {
+        String sql = "UPDATE orders SET"
+        		+ " status=:status,"
+        		+ " order_date=:orderDate,"
+        		+ " destination_name=:destinationName,"
+        		+ " destination_email=:destinationEmail,"
+        		+ " destination_zipcode=:destinationZipcode,"
+        		+ " destination_address=:destinationAddress,"
+        		+ " destination_tel=:destinationTel,"
+        		+ " delivery_time=:deliveryTime,"
+        		+ " payment_method=:paymentMethod"
+        		+ " WHERE id=:id";
+        SqlParameterSource param = new BeanPropertySqlParameterSource(order);
+
+        template.update(sql, param);
     }
 }

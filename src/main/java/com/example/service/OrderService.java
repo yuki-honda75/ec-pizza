@@ -36,7 +36,7 @@ public class OrderService {
     }
 
     public Order showCart(Integer userId) {
-        List<Order> orderList = orderRepository.findByUserIdAndStatus(userId, 0);
+        List<Order> orderList = orderRepository.findByCondision(null, userId, 0);
         if (orderList == null) {
             return null;
         }
@@ -44,6 +44,15 @@ public class OrderService {
     }
 
     public List<Order> showHistory(Integer userId) {
-        return orderRepository.findByUserIdAndStatus(userId, null);
+        return orderRepository.findByCondision(null, userId, null);
+    }
+
+    public Order cartConfirm(Integer orderId) {
+        List<Order> orderList = orderRepository.findByCondision(orderId, null, 0);
+        return orderList.get(0);
+    }
+
+    public void updateOrder(Order order) {
+        orderRepository.update(order);
     }
 }
