@@ -254,4 +254,9 @@ public class OrderController {
 
         return "order_history";
     }
+
+    @RequestMapping("/remove")
+    public String removeOrderItem(Integer orderItemId) {
+        return "redirect:/order/cartList";
+    }
 }

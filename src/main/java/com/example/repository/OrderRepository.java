@@ -248,7 +248,12 @@ public class OrderRepository {
         }
         return orderList;
     }
-
+    
+    /**
+     * 注文情報を更新する
+     * 
+     * @param order
+     */
     public void update(Order order) {
         String sql = "UPDATE orders SET"
         		+ " status=:status,"
@@ -262,6 +267,18 @@ public class OrderRepository {
         		+ " payment_method=:paymentMethod"
         		+ " WHERE id=:id";
         SqlParameterSource param = new BeanPropertySqlParameterSource(order);
+
+        template.update(sql, param);
+    }
+
+    /**
+     * 注文商品を削除
+     * 
+     * @param orderItemId
+     */
+    public void deleteOrderItem(Integer orderItemId) {
+        String sql = "DLETE FROM order_items WHERE id=:orderItemId";
+        SqlParameterSource param = new MapSqlParameterSource().addValue("orderItemId", orderItemId);
 
         template.update(sql, param);
     }
