@@ -235,11 +235,11 @@ public class OrderRepository {
             sql += " AND user_id=:userId";
             param.addValue("userId", userId);
         }
-        if (status == 0) {
+        if(status == null) {
+            sql += " AND status!=0";
+        } else if (status == 0) {
             sql += " AND status=:status";
             param.addValue("status", status);
-        } else if(status == null) {
-            sql += " AND status!=0";
         }
         List<Order> orderList = template.query(sql, param, ORDER_RESULT_SET_EXTRACTOR);
         
