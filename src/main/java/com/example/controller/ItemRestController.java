@@ -26,7 +26,7 @@ public class ItemRestController {
 
     @RequestMapping(value = "/autocomplete", method = RequestMethod.GET)
     public Map<String,String[]> itemAutocomplete() {
-        List<Item> itemList = itemService.showList();
+        List<Item> itemList = itemService.findAll();
         String[] items = new String[itemList.size()];
         int i = 0;
         for (Item item : itemList) {

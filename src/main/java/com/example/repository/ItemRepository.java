@@ -4,6 +4,9 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -34,10 +37,27 @@ public class ItemRepository {
 	 * @return
 	 */
 	public List<Item> findAll() {
-		String sql = "SELECT id,name,description,price_M,price_L,image_path FROM items";
+		String sql = "SELECT id,name,description,price_M,price_L,image_path FROM items Order By price_L";
 		List<Item> itemList = template.query(sql, ITEM_ROW_MAPPER);
 		
 		return itemList;
+	}
+
+	/**
+	 * 商品全件ページ取得
+	 * 
+	 * @return
+	 */
+	public Page<Item> findAllPage(Pageable pageable) {
+		String sql = "SELECT id,name,description,price_M,price_L,image_path FROM items Order By price_L";
+		String sqlLimitOffset = " LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset();
+
+		String sqlCount = "SELECT count(*) FROM items";
+		int count = template.queryForObject(sqlCount, new MapSqlParameterSource(), Integer.class);
+
+		List<Item> itemList = template.query(sql + sqlLimitOffset, ITEM_ROW_MAPPER);
+		
+		return new PageImpl<Item>(itemList, pageable, count);
 	}
 
 	public List<Item> findByCondition(String name, Integer sortNum) {

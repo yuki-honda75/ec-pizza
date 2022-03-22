@@ -3,7 +3,6 @@ package com.example.repository;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.Null;
 
 import com.example.domain.Item;
 import com.example.domain.Order;
