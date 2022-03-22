@@ -1,8 +1,11 @@
 package com.example.controller;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,16 +38,14 @@ public class ItemController {
 	 * @return
 	 */
 	@RequestMapping("/showList")
-	public String showList(String name, Integer sortNum, Model model) {
-		List<Item> itemList = null;
-		if (name != null || sortNum != null) {
-			itemList = itemService.search(name, sortNum);
-		} else {
-			itemList = itemService.showList();
-		}
+	public String showList(String name, Integer sortNum, Model model, @PageableDefault(size = 6, page = 0) Pageable pageable) {
+		
+		Page<Item> pageItem = itemService.search(name, sortNum, pageable);
+		
+		model.addAttribute("page", pageItem);
 		model.addAttribute("name", name);
+		model.addAttribute("itemList", pageItem.getContent());
 		model.addAttribute("sortNum", sortNum);
-		model.addAttribute("itemList", itemList);
 		
 		return "item_list_pizza";
 	}
