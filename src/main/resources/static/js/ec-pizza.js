@@ -57,16 +57,14 @@ $(function(){
             $('#zipcode_error').text('住所が見つかりません');
             console.log("通信失敗");
         });
-    })
+    });
 
+    //合計金額算出
     function calcTotalPrice() {
         let size = $('.size:checked').val();
-        console.log(size);
         let priceM = Number($('#price_M').val());
         let priceL = Number($('#price_L').val());
         let toppingCount = $('.topping:checked').length
-        console.log(priceM);
-        console.log(toppingCount);
         let quantity = $('#quantity').val();
         let totalPrice = 0;
         if (size == '0') {
@@ -83,4 +81,20 @@ $(function(){
     $('input,select').on('change', function() {
        calcTotalPrice(); 
     });
+
+    //オートコンプリート
+    $.ajax({
+        url: "http://localhost:8080/ec-pizza/item/autocomplete",
+        type: "GET",
+        dataType: "json",
+        async: true
+    }).done(function(data){
+        console.log(data);
+        $("#keywords").autocomplete({
+            source: data.items
+        });
+    }).fail(function(jqXHR, textStatus, errorThrown){
+        console.log("通信失敗");
+    });
+
 });
