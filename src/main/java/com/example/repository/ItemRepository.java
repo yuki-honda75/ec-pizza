@@ -60,26 +60,26 @@ public class ItemRepository {
 		return new PageImpl<Item>(itemList, pageable, count);
 	}
 
-	public List<Item> findByCondition(String name, Integer sortNum) {
+	public Page<Item> findByCondition(String name, Integer sortNum, Pageable pageable) {
 		String sql = "SELECT id,name,description,price_M,price_L,image_path FROM items";
 		String whereSql = " WHERE 1=1";
-		String orderSql = "";
+		String orderSql = " ORDER BY price_L";
 		MapSqlParameterSource param = new MapSqlParameterSource();
-		if (!name.isEmpty()) {
+		if (name != null) {
 			whereSql += " AND name LIKE :name";
 			param.addValue("name", "%" + name + "%");
 		}
-		//0なら安い順、1なら高い順
-		if (sortNum != null) {
-			if (sortNum == 0) {
-				orderSql += " ORDER BY price_L";
-			} else if (sortNum == 1) {
-				orderSql += " ORDER BY price_L DESC";
-			}
+		//1なら高い順
+		if (sortNum != null && sortNum == 1) {
+			orderSql += " DESC";
 		}
-		List<Item> itemList = template.query(sql + whereSql + orderSql, param, ITEM_ROW_MAPPER);
+		String sqlLimitOffset = " LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset();
 
-		return itemList;
+		String sqlCount = "SELECT count(*) FROM items";
+		int count = template.queryForObject(sqlCount + whereSql, param, Integer.class);
+		List<Item> itemList = template.query(sql + whereSql + orderSql + sqlLimitOffset, param, ITEM_ROW_MAPPER);
+
+		return new PageImpl<Item>(itemList, pageable, count);
 	}
 
 	/**

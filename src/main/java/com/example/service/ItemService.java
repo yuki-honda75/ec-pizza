@@ -29,8 +29,8 @@ public class ItemService {
 		return itemRepository.findAllPage(pageable);
 	}
 
-	public List<Item> search(String name, Integer sortNum) {
-		return itemRepository.findByCondition(name, sortNum);
+	public Page<Item> search(String name, Integer sortNum, Pageable pageable) {
+		return itemRepository.findByCondition(name, sortNum, pageable);
 	}
 
 	public Item showDetail(Integer id) {

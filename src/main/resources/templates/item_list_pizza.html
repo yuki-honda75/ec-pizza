@@ -113,6 +113,7 @@
                     クリア
                   </button>
                 </div>
+                <input type="hidden" name="sort">
               </form>
             </div>
           </div>
@@ -130,35 +131,86 @@
             col-md-10
             col-sm-10
             col-xs-12
-          "
-        >
-          <table class="table table-striped item-list-table">
-            <tbody>
-              <div th:each="item,status : ${itemList}">
-              <th:block th:if="${status.index % 3 == 0}">
-              <tr>
-              </th:block>
-                <th>
-                  <a href="item_detail.html" th:href="@{/item/detail?id=} + ${item.id}">
-                    <img
-                      src="../static/img_pizza/1.jpg"
-                      th:src="@{/img_pizza/} + ${item.imagePath}"
-                      class="img-responsive img-rounded item-img-center"
-                      width="200"
-                      height="600"
-                    /> </a
-                  ><br />
-                  <a href="item_detail.html" th:text="${item.name}">じゃがバターベーコン</a><br />
-                  <span class="price">&nbsp;М&nbsp;</span
-                  >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceM, 0, 'COMMA')}">1,380</span>円(税抜)<br />
-                  <span class="price">&nbsp;Ｌ</span
-                  >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceL, 0, 'COMMA')}">2,380円</span>(税抜)<br />
-                </th>
-                
-              <th:block th:if="${status.index % 3 == 2}">
-              </tr>
-              </th:block>
-              </div>
+            "
+            >
+            <table class="table table-striped item-list-table">
+              <tbody>
+                <div th:each="item,status : ${itemList}">
+                  <th:block th:if="${status.index % 3 == 0}">
+                    <tr>
+                    </th:block>
+                    <th>
+                      <a href="item_detail.html" th:href="@{/item/detail?id=} + ${item.id}">
+                        <img
+                        src="../static/img_pizza/1.jpg"
+                        th:src="@{/img_pizza/} + ${item.imagePath}"
+                        class="img-responsive img-rounded item-img-center"
+                        width="200"
+                        height="600"
+                        /> </a
+                        ><br />
+                        <a href="item_detail.html" th:text="${item.name}">じゃがバターベーコン</a><br />
+                        <span class="price">&nbsp;М&nbsp;</span
+                          >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceM, 0, 'COMMA')}">1,380</span>円(税抜)<br />
+                          <span class="price">&nbsp;Ｌ</span
+                            >&nbsp;&nbsp;<span th:text="${#numbers.formatInteger(item.priceL, 0, 'COMMA')}">2,380円</span>(税抜)<br />
+                          </th>
+                          
+                          <th:block th:if="${status.index % 3 == 2}">
+                          </tr>
+                        </th:block>
+                      </div>
+                      
+                <nav aria-label="Page navigation2">
+                  <ul class="pagination">
+                    <!--/* 前のページ */-->
+                    <li class="page-item" th:classappend="${page.first} ? 'disabled'">
+                      <a th:href="@{''(page=${page.number - 1},name=${name}, sortNum=${sortNum})}" class="page-link"
+                      th:tabindex="${page.first} ? -1" aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                  </li>
+
+                  <!--/* 最初のページ */-->
+                  <li th:if="${page.number gt 2}" class="page-item">
+                    <a th:href="@{''(page=0,name=${name}, sortNum=${sortNum})}" class="page-link">1</a>
+                  </li> 
+
+                  <!--/* … */-->
+                  <li th:if="${page.number gt 3}" class="page-item disabled">
+                    <a href="#" class="page-link">…</a>
+                  </li>
+
+                  <th:block th:each="i : ${ #numbers.sequence(page.number - 2, page.number + 2) }">
+                    <li th:if="${i ge 0 and i lt page.totalPages}" class="page-item"
+                      th:classappend="${i eq page.number} ? 'active'">
+                      <a th:href="@{''(page=${i},name=${name}, sortNum=${sortNum})}" th:text="${i + 1}" class="page-link"></a>
+                    </li>
+                  </th:block>
+
+                  <!--/* … */-->
+                  <li th:if="${page.totalPages gt (page.number + 4)}" class="page-item disabled">
+                    <a href="#" class="page-link">…</a>
+                  </li>
+
+                  <!--/* 最後のページ */-->
+                  <li th:if="${page.totalPages gt (page.number + 3)}" class="page-item">
+                    <a th:href="@{''(page=${page.totalPages - 1},name=${name}, sortNum=${sortNum})}" th:text="${page.totalPages}"
+                      class="page-link"></a>
+                  </li>
+
+                  <!--/* 次のページ */-->
+                  <li class="page-item" th:classappend="${page.last} ? 'disabled'">
+                    <a th:href="@{''(page=${page.number + 1},name=${name}, sortNum=${sortNum})}" class="page-link"
+                      th:tabindex="${page.last} ? -1" aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
             </tbody>
           </table>
         </div>
