@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpSession;
 
+import com.example.domain.ChargeRequest;
 import com.example.domain.Item;
 import com.example.domain.LoginUser;
 import com.example.domain.Order;
@@ -23,6 +24,7 @@ import com.example.service.OrderService;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,6 +47,8 @@ public class OrderController {
     private ItemService itemService;
     @Autowired
     private HttpSession session;
+    @Value("${stripe.public.key}")
+    private String stripePublicKey;
 
     @ModelAttribute
     public InsertOrderForm setUpInsertOrderForm() {
@@ -165,6 +169,9 @@ public class OrderController {
         if (form.getPaymentMethod() == null) {
             form.setPaymentMethod("1");
         }
+        model.addAttribute("amount", order.getTotalPrice());
+        model.addAttribute("stripePublicKey", stripePublicKey);
+        model.addAttribute("currency", ChargeRequest.Currency.JPY);
         
         model.addAttribute("order", order);
         return "order_confirm";

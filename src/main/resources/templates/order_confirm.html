@@ -393,6 +393,24 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
         </div>
         <div class="row">
           <div class="col-xs-offset-4 col-xs-4">
+            <form action='/charge' method='POST' id='checkout-form'>
+              <input type='hidden' th:value='${amount}' name='amount' />
+              <!-- NOTE: data-key/data-amount/data-currency will be rendered by Thymeleaf -->
+              <script
+                src='https://checkout.stripe.com/checkout.js' 
+                class='stripe-button'
+                th:attr='data-key=${stripePublicKey}, 
+                  data-amount=${amount}, 
+                  data-currency=${currency}'
+                data-name='Baeldung'
+                data-description='Spring course checkout'
+                data-image
+                  ='https://www.baeldung.com/wp-content/themes/baeldung/favicon/android-chrome-192x192.png'
+                data-locale='auto'
+                data-zip-code='false'
+                data-label="この内容で注文する">
+              </script>
+            </form>
             <div class="form-group">
               <input
                 class="form-control btn btn-warning btn-block"
