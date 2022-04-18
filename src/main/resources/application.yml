@@ -17,3 +17,8 @@ spring:
 server:
   servlet:
     context-path: /ec-pizza
+stripe:
+  public:
+    key: pk_test_51Kg19vEHPP3PCUKNoNktBYftlWHvfUW48tnNoRR5LzxWsjT4ZJnc0AhfkT02enNweSf3PXonyUOd6SoAaTRBBGkf00KgUJP1B4
+  secret:
+    key: sk_test_51Kg19vEHPP3PCUKN6GgzjmJeZ0M9VNaluCLX7ckmj8QppMDLs49wusImtZj7hfYEedlMG99wV7TGEBzajbmO0ej500ZUXH1cKk

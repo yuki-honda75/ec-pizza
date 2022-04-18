@@ -5,6 +5,8 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>ピザ屋のネット注文</title>
     <link href="../static/css/bootstrap.css" th:href="@{/css/bootstrap.css}" rel="stylesheet" />
     <link href="../static/css/piza.css" th:href="@{/css/piza.css}" rel="stylesheet" />
@@ -356,6 +358,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                       <div class="col-sm-12">
                         <label class="radio-inline">
                           <input
+                            class="payment-method"
                             type="radio"
                             name="responsibleCompany"
                             th:field="*{paymentMethod}"
@@ -376,6 +379,7 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
                       <div class="col-sm-12">
                         <label class="radio-inline">
                           <input
+                            class="payment-method"
                             type="radio"
                             name="responsibleCompany"
                             th:field="*{paymentMethod}"
@@ -393,8 +397,29 @@ xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
         </div>
         <div class="row">
           <div class="col-xs-offset-4 col-xs-4">
+            <form action='/charge' method='POST' id='checkout-form'>
+              <input type='hidden' th:value='${amount}' name='amount' />
+              <!-- NOTE: data-key/data-amount/data-currency will be rendered by Thymeleaf -->
+              <script
+                src='https://checkout.stripe.com/checkout.js' 
+                id="stripe-button"
+                class='stripe-button'
+                th:attr='data-key=${stripePublicKey}, 
+                  data-amount=${amount}, 
+                  data-currency=${currency}'
+                data-name='ラクラクピザ'
+                data-description='Spring course checkout'
+                data-image
+                  ='https://www.baeldung.com/wp-content/themes/baeldung/favicon/android-chrome-192x192.png'
+                data-locale='auto'
+                data-zip-code='false'
+                data-label="クレジットカード情報を入力する"
+                >
+              </script>
+            </form>
             <div class="form-group">
               <input
+                id="cash-button"
                 class="form-control btn btn-warning btn-block"
                 type="submit"
                 value="この内容で注文する"

@@ -30,3 +30,7 @@ span#total-price {
 th {
   text-align: center;
 }
+
+.stripe-button-el {
+  display: none;
+}
