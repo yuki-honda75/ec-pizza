@@ -97,4 +97,19 @@ $(function(){
         console.log("通信失敗");
     });
 
+    //注文確定ボタンの表示/非表示
+    $('.stripe-button-el').hide();
+    $('input:radio').on('change', function(){
+        let paymentMethod = $('.payment-method:checked').val();
+        console.log(paymentMethod);
+        if (paymentMethod == 1) {
+            $('.stripe-button-el').hide();
+            $('#cash-button').show();
+        } else if (paymentMethod == 2) {
+            $('.stripe-button-el').trigger("click");
+            $('.stripe-button-el').show();
+            $('#cash-button').hide();
+        }
+    });
+
 });
